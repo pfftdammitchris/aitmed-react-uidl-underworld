@@ -1,6 +1,8 @@
 import React from 'react'
-import { RouteChildrenProps } from 'react-router-dom'
+import yaml from 'yaml'
+import axios from 'axios'
 import ReactUIDL from '@aitmed/react-uidl'
+import styled from 'styled-components'
 import { prynote } from 'app/client'
 import Modal from 'components/uidl/Modal'
 import Button from 'components/uidl/Button'
@@ -10,12 +12,14 @@ import Label from 'components/uidl/Label'
 import Div from 'components/uidl/Div'
 import Select from 'components/uidl/Select'
 import Split from 'components/Split'
-import useUIDL from 'hooks/useUIDL'
+import Controls, { sizes } from 'Controls'
 import useYamlTextField from 'hooks/useYamlTextField'
 import useSelectPage from 'hooks/useSelectPage'
-import useSelectDevice from 'hooks/useSelectDevice'
-import Controls from './Controls'
-import AppContext from './AppContext'
+import testData from 'data/testData'
+import testDataSignIn from 'data/testDataSignIn'
+import testDataLanguages from 'data/testDataLanguages'
+import testDataLanguagesFixed from 'data/testDataLanguagesFixed'
+import AppContext from 'AppContext'
 
 const uidlEndpoint = 'https://public.aitmed.com/alpha/uidlEndpoint.yml'
 
@@ -30,11 +34,29 @@ function UIDLDiv({ style, ...props }: any) {
   return <Div style={styles} {...props} />
 }
 
-function App({
-  history,
-  location,
-  match,
-}: RouteChildrenProps<{ page?: string }>) {
+export default {
+  title: 'Lightning Dev Tools',
+  component: ReactUIDL,
+  decorators: [
+    (s: any) => (
+      <div
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          position: 'absolute',
+          padding: 25,
+          width: '100vw',
+          height: '100vh',
+          boxSizing: 'border-box',
+          overflowX: 'hidden',
+        }}
+      >
+        {s()}
+      </div>
+    ),
+  ],
+}
+
+export const Positioning = () => {
   const ctx = React.useContext(AppContext)
   const [{ config, baseCss, basePage }, setInitData] = React.useState<any>({})
   const [vw, setVw] = React.useState(sizes.GalaxyS5.width)
@@ -46,15 +68,14 @@ function App({
   } = useYamlTextField({
     initialValue: testDataSignIn.trim(),
   })
-  const { selectedPage, selectPage } = useSelectPage({
+  const {
+    options: pageSelectOptions,
+    selected: selectedPage,
+    selectPage,
+  } = useSelectPage({
     pages: config?.page,
     startPage: config?.startPage,
   })
-  const {
-    selectedDevice,
-    selectDevice,
-    selectDeviceOptions,
-  } = useSelectDevice({ initialValue: 'galaxyS5' })
 
   React.useEffect(() => {
     initBases().then(setInitData).catch(console.error)
@@ -116,7 +137,7 @@ function App({
           onYmlChange={onYmlChange}
           selectedPage={selectedPage}
           selectPage={selectPage}
-          pages={config?.page}
+          pageSelectOptions={pageSelectOptions}
         />
       </div>
     </Split>
@@ -139,5 +160,3 @@ async function initBases() {
     console.error(error)
   }
 }
-
-export default App

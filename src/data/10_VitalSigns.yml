@@ -1,0 +1,217 @@
+pageName: VitalSigns
+components:
+  - type: header
+    componentId: header
+    className: header
+    children:
+      - type: button
+        componentId: leftButton
+        path: backarrow.png
+        text: Back
+        className: leftButton
+        onClick: goToProfile
+      - type: label
+        componentId: headerTitle
+        text: Vital Signs
+        className: headerTitle
+        align: centerX
+  - type: view
+    componentId: bodyContainer
+    style:
+      left: "0"
+      top: "0.1"
+      width: "1"
+      height: "1"
+    children:
+      - type: label
+        componentId: vitalSignsLabel
+        text: Connect your medical device
+        style:
+          left: "0.4"
+          top: "0.3"
+          width: "0.186"
+          height: "0.27"
+          border:
+            style: "5"
+        children:
+          - type: image
+            componentId: vitalSignsBluetoothIcon
+            path: bluetooth.png
+            style:
+              left: "0.12"
+              top: "0.0554"
+              width: "0.0533"
+              height: "0.0146"
+              border: 
+                style: "5"
+              borderRadius: "10"
+      - type: label
+        componentId: bloodPressureLabel
+        text: Blood Pressure (BP)
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.12"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: bloodPressureTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.158"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: heartRateLabel
+        text: Heart Rate (BPM)
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.182"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: heartRateTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.258"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: respiratoryRatePerMinLabel
+        text: Respiratory Rate/Min
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.32"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: respiratoryRatePerMinTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.356"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: pulseOxLabel
+        text: Pulse Ox
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.7"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: pulseOxTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.75"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: heightLabel
+        text: Height (ft)
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.8"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: heightTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.85"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: weightLabel
+        text: Weight (lbs)
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "0.90"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: weightTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "0.95"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: label
+        componentId: bmiLabel
+        text: BMI
+        style:
+          color: "0xcbcbcbff"
+          left: "0.1333"
+          top: "1"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "13"
+      - type: textField
+        componentId: bmiTextField
+        contentType: text
+        style:
+          left: "0.1333"
+          top: "1.05"
+          width: "0.72"
+          height: "0.03"
+          fontSize: "14"
+          border:
+            style: "2"
+            color: "0x000000ff"
+            width: "1"
+      - type: button
+        componentId: saveButton
+        className: button
+        text: Save
+        style:
+          left: "0.25"
+          top: "1.15"
+          width: "0.5"
+          height: "0.06"

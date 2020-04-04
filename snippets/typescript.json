@@ -1,0 +1,26 @@
+{
+  "debug console.log": {
+    "prefix": "dlog",
+    "body": "import { log } from './utils'"
+  },
+  "testUtils": {
+    "prefix": "rtest",
+    "body": "import testUtils from './testUtils'"
+  },
+  "toast": {
+    "prefix": "toast",
+    "body": "import { toast } from 'react-toastify'"
+  },
+  "import button": {
+    "prefix": "btt",
+    "body": "import Button from 'components/common/Button'"
+  },
+  "import input": {
+    "prefix": "input",
+    "body": "import Input from 'components/common/Input'"
+  },
+  "import Actions component": {
+    "prefix": "act",
+    "body": "import Actions from 'components/common/Actions'"
+  }
+}
