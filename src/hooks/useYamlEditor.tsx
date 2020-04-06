@@ -1,39 +1,81 @@
 // Utility react hook for debugging UIDL - Provides controls for working
 //    with text fields. Ex: WYSIWYG UIDL editor
 import React from 'react'
+import {
+  normalizeBorderAttrs,
+  normalizeColorAttrs,
+  normalizeFontAttrs,
+  normalizePositionAttrs,
+  normalizeStyleAttrs,
+  prepareAssetUrl,
+  resolveAliases,
+  resolveAligns,
+  resolveChildren,
+  resolveClassNames,
+  resolvePositionAttrs,
+  resolveSizeAttrs,
+  resolveStyles,
+  resolveTagName,
+} from '@aitmed/react-uidl'
 import yaml from 'yaml'
 import { useImmer } from 'use-immer'
 
-function useYamlEditor({ initialValue = '' }) {
-  const [{ value: yml }, _setYmlState] = useImmer({ value: initialValue })
-  const [parsedYml, setParsedYml] = React.useState(
-    initialValue ? yaml.parse(initialValue) : {},
-  )
+const initialState = {
+  yml: '',
+  parsedYml: {},
+}
 
-  function setYml(e: React.ChangeEvent<HTMLInputElement> | string) {
-    // Caller is directly using a YAML string
-    if (typeof e === 'string') {
-      if (e !== yml) {
-        _setYmlState((draft) => {
-          draft.value = e
-        })
-        setParsedYml(yaml.parse(e))
-      }
-    } else {
-      e.persist()
-      // Text field
-      _setYmlState((draft) => {
-        draft.value = e.target.value
-      })
-      setParsedYml(yaml.parse(e.target.value))
+function useYamlEditor({ initialValue = '', delay: delayProp = 50 }) {
+  const [state, setState] = useImmer(initialState)
+  const [delay, setDelay] = React.useState(delayProp)
+
+  function parseYml(yml: string) {
+    try {
+      return yaml.parse(yml)
+    } catch (error) {
+      console.error(error)
+      return yml
     }
   }
 
+  /** Parses a string of YML
+   * @param { string } yml - Yaml string
+   */
+  function setYml(e: React.ChangeEvent<HTMLInputElement> | string) {
+    // Caller is directly using a YAML string
+    if (typeof e === 'string') {
+      if (e !== state.yml) {
+        setState((draft) => {
+          draft.yml = e
+          draft.parsedYml = parseYml(e)
+        })
+      }
+    } else {
+      e.persist()
+      if (e.target.value !== state.yml) {
+        setState((draft) => {
+          draft.yml = e.target.value
+          draft.parsedYml = parseYml(e.target.value)
+        })
+      }
+    }
+  }
+
+  React.useEffect(() => {
+    if (initialValue) {
+      setState((draft) => {
+        const parsedYml = yaml.parse(initialValue)
+        draft.yml = initialValue
+        draft.parsedYml = parsedYml
+      })
+    }
+  }, [initialValue, setState])
+
   return {
-    yml,
-    parsedYml,
+    ...state,
+    delay,
+    setDelay,
     setYml,
-    setParsedYml,
   }
 }
 

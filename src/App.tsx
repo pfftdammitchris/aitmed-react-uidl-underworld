@@ -1,6 +1,7 @@
 import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
 import ReactUIDL from '@aitmed/react-uidl'
+import yaml from 'yaml'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -23,6 +24,7 @@ import Controls from './Controls'
 import AppContext from './AppContext'
 
 const uidlEndpoint = 'https://public.aitmed.com/alpha/uidlEndpoint.yml'
+const storedConfigKey = 'uidl-uw'
 
 function UIDLDiv({ style, ...props }: any) {
   const styles = {
@@ -41,49 +43,38 @@ function App({
   match,
 }: RouteChildrenProps<{ page?: string }>) {
   const ctx = React.useContext(AppContext)
-  const [{ config, baseCss, basePage }, setInitData] = React.useState<any>({})
   const [vw, setVw] = React.useState(devices['galaxyS5'].sizes.width)
   const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
-  const { yml, parsedYml, setParsedYml, setYml } = useYamlEditor({
-    initialValue: testData.trim(),
+  const { selectDevice, selectPage } = useUIDL2({
+    params: match?.params,
+    location,
+    navigate: history.push,
+    uidlEndpoint,
   })
-  const { selectedPage, selectPage } = useSelectPage({
-    pages: config?.page,
-    startPage: config?.startPage,
-  })
-  const {
-    selectedDevice,
-    selectDevice,
-    selectDeviceOptions,
-  } = useSelectDevice({ initialValue: 'galaxyS5' })
-
-  React.useEffect(() => {
-    initBases().then(setInitData).catch(console.error)
-  }, [])
-
-  console.log(parsedYml)
 
   function onSelectDevice(e) {
     selectDevice(e)
   }
 
-  async function onSelectPage(e) {
-    try {
-      selectPage(e)
-      const nextYml = await axios.get(
-        `${config?.baseUrl}${e.target.value}_en.yml`,
-      )
-      setYml(nextYml.data)
-    } catch (error) {
-      console.error(error)
-    }
+  function onSelectPage(e) {
+    selectPage(e)
   }
+
+  React.useEffect(() => {
+    init()
+      .then((c) => {
+        console.log('c:', c)
+        setConfig(c)
+      })
+      .catch(console.error)
+    // eslint-disable-next-line
+  }, [])
 
   React.useEffect(() => {
     const device = devices[selectedDevice]
     setVw(device.sizes.width)
     setVh(device.sizes.height)
-  }, [selectedDevice])
+  }, [])
 
   return (
     <>
@@ -117,8 +108,8 @@ function App({
             }}
           >
             <ReactUIDL
-              baseCss={baseCss}
-              basePage={basePage}
+              baseCss={config.baseCss}
+              basePage={config.basePage}
               page={parsedYml}
               config={config}
               components={{
@@ -153,11 +144,12 @@ function App({
             }}
             yml={yml}
             setYml={setYml}
-            selectedPage={selectedPage}
+            parsedYml={parsedYml}
+            current={current}
             selectPage={onSelectPage}
             selectDevice={onSelectDevice}
             selectedDevice={selectedDevice}
-            pages={config?.page}
+            pages={config.pages}
           />
         </Grid>
       </Grid>
@@ -174,20 +166,38 @@ function App({
   )
 }
 
-async function initBases() {
-  try {
-    const config = await prynote.uidl.getUIDL(uidlEndpoint)
-    const baseUrl = config.baseUrl
-    const reqUris = [`${baseUrl}BaseCSS.yml`, `${baseUrl}BasePage_en.yml`]
-    const reqs = reqUris.map((uri: string) => prynote.uidl.getUIDL(uri))
-    const [baseCss, basePage] = await Promise.all(reqs)
+async function getUidlFromServer() {
+  const config = await prynote.uidl.getUIDL(uidlEndpoint)
+  const { baseUrl, startPage, page: pages = [], ...rest } = config
+  return {
+    baseUrl,
+    startPage,
+    pages,
+    ...rest,
+  }
+}
+
+async function init() {
+  let c: { baseUrl: string; baseCss: any; basePage: any; startPage: any } | any
+
+  if (typeof window !== 'undefined') {
+    c = window.localStorage.getItem(storedConfigKey)
+    if (c) {
+      c = JSON.parse(c)
+    } else {
+      c = await getUidlFromServer()
+      window.localStorage.setItem(storedConfigKey, JSON.stringify(c))
+    }
+    const { baseUrl = '', startPage, pages = [] } = c
+    const baseCss = await prynote.uidl.getUIDL(`${baseUrl}BaseCSS.yml`)
+    const basePage = await prynote.uidl.getUIDL(`${baseUrl}BasePage_en.yml`)
     return {
-      config,
+      startPage,
+      baseUrl,
       baseCss,
       basePage,
+      pages,
     }
-  } catch (error) {
-    console.error(error)
   }
 }
 

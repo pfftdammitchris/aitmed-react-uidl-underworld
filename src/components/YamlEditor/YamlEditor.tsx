@@ -10,15 +10,21 @@ const StyledYamlEditorRoot = styled.div`
     font-size: 12px;
     border-color: #fff;
   }
+  .label {
+    color: rgba(255, 255, 255, 0.7);
+  }
   .input {
     color: #fff;
   }
-  .outline {
+  .notchedOutline {
     border-color: #fff;
   }
 `
 
-function YamlEditor(props: any) {
+function YamlEditor(props: {
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => any
+}) {
   return (
     <StyledYamlEditorRoot>
       <TextField
@@ -26,16 +32,21 @@ function YamlEditor(props: any) {
         rows={15}
         rowsMax={30}
         label="Editor"
+        InputLabelProps={{
+          classes: {
+            root: 'label',
+          },
+        }}
         variant="outlined"
         color="secondary"
         spellCheck={false}
         InputProps={{
           classes: {
             root: 'input',
-            notchedOutline: 'outline',
+            notchedOutline: 'notchedOutline',
           },
         }}
-        margin="dense"
+        margin="normal"
         autoFocus
         multiline
         fullWidth

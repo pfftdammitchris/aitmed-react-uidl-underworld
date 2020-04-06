@@ -11,34 +11,38 @@ export function toSelectPageOptions(pages: string[]) {
 }
 
 function useSelectPage({
+  name = '',
   pages = [],
-  startPage = '',
+  navigate = () => {},
+  onChange,
 }: {
-  startPage: string
-  pages: string[]
+  name?: string
+  pages?: string[]
+  onChange?: (page: string) => void
+  navigate: (to: string) => void
 }) {
-  const [selectedPage, setSelectedPage] = React.useState(startPage)
+  const [current, setCurrent] = React.useState(name)
 
-  function selectPage(e: React.ChangeEvent<HTMLInputElement> | string) {
-    if (typeof e === 'string') {
-      if (selectedPage !== e) {
-        setSelectedPage(e)
+  const selectPage = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement> | string) => {
+      if (typeof e === 'string') {
+        navigate('/' + e)
+      } else {
+        navigate('/' + e.target.value)
       }
-    } else {
-      if (selectedPage !== e.target.value) {
-        setSelectedPage(e.target.value)
-      }
-    }
-  }
+    },
+    [navigate],
+  )
 
   React.useEffect(() => {
-    if (!selectedPage && startPage) {
-      setSelectedPage(startPage)
+    if (current !== name) {
+      setCurrent(name)
+      if (onChange) onChange(name)
     }
-  }, [selectedPage, startPage])
+  }, [current, name, onChange])
 
   return {
-    selectedPage,
+    current,
     selectPage,
     selectPageOptions: toSelectPageOptions(pages),
   }

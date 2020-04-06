@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Actions from 'components/common/Actions'
 import Select from 'components/common/Select'
+import Statistics from 'components/Statistics'
 import YamlEditor from 'components/YamlEditor'
 import { toSelectPageOptions } from 'hooks/useSelectPage'
 import { selectDeviceOptions } from 'hooks/useSelectDevice'
@@ -13,11 +14,12 @@ export interface ControlsProps {
     height: number
   }
   yml?: string
+  parsedYml?: any
   setYml?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
   selectedDevice?: string
   selectDevice?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
-  selectedPage?: string
   selectPage?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
+  current?: string
   pages?: string[]
 }
 
@@ -29,9 +31,10 @@ function Controls({
   viewport,
   yml,
   setYml,
+  parsedYml,
   selectedDevice,
   selectDevice,
-  selectedPage = '',
+  current = '',
   selectPage,
   pages = [],
 }: ControlsProps) {
@@ -49,10 +52,11 @@ function Controls({
       <Select
         name="page"
         label="Select Page"
-        value={selectedPage}
+        value={current}
         onChange={selectPage}
         options={toSelectPageOptions(pages)}
       />
+      <Statistics parsedYml={parsedYml} />
       <YamlEditor value={yml} onChange={setYml} />
     </StyledRoot>
   )
