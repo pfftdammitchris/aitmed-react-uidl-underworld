@@ -14,7 +14,7 @@ import Div from 'components/uidl/Div'
 import Select from 'components/uidl/Select'
 import Split from 'components/Split'
 import useUIDL from 'hooks/useUIDL'
-import useYamlTextField from 'hooks/useYamlTextField'
+import useYamlEditor from 'hooks/useYamlEditor'
 import useSelectPage from 'hooks/useSelectPage'
 import useSelectDevice, { devices } from 'hooks/useSelectDevice'
 import useViewport from 'hooks/useViewport'
@@ -44,7 +44,7 @@ function App({
   const [{ config, baseCss, basePage }, setInitData] = React.useState<any>({})
   const [vw, setVw] = React.useState(devices['galaxyS5'].sizes.width)
   const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
-  const { yml, parsedYml, setParsedYml, setYml } = useYamlTextField({
+  const { yml, parsedYml, setParsedYml, setYml } = useYamlEditor({
     initialValue: testData.trim(),
   })
   const { selectedPage, selectPage } = useSelectPage({

@@ -4,7 +4,7 @@ import React from 'react'
 import yaml from 'yaml'
 import { useImmer } from 'use-immer'
 
-function useYamlTextField({ initialValue = '' }) {
+function useYamlEditor({ initialValue = '' }) {
   const [{ value: yml }, _setYmlState] = useImmer({ value: initialValue })
   const [parsedYml, setParsedYml] = React.useState(
     initialValue ? yaml.parse(initialValue) : {},
@@ -37,4 +37,4 @@ function useYamlTextField({ initialValue = '' }) {
   }
 }
 
-export default useYamlTextField
+export default useYamlEditor

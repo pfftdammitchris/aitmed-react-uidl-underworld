@@ -25,6 +25,7 @@ function YamlEditor(props: any) {
         name="page"
         rows={15}
         rowsMax={30}
+        label="Editor"
         variant="outlined"
         color="secondary"
         spellCheck={false}
