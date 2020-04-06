@@ -16,15 +16,16 @@ function useYamlTextField({ initialValue = '' }) {
       if (e !== yml) {
         _setYmlState((draft) => {
           draft.value = e
-          setParsedYml(yaml.parse(e))
         })
+        setParsedYml(yaml.parse(e))
       }
     } else {
+      e.persist()
       // Text field
       _setYmlState((draft) => {
         draft.value = e.target.value
-        setParsedYml(yaml.parse(e.target.value))
       })
+      setParsedYml(yaml.parse(e.target.value))
     }
   }
 

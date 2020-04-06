@@ -1,6 +1,9 @@
 import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
 import ReactUIDL from '@aitmed/react-uidl'
+import axios from 'axios'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import { prynote } from 'app/client'
 import Modal from 'components/uidl/Modal'
 import Button from 'components/uidl/Button'
@@ -13,7 +16,9 @@ import Split from 'components/Split'
 import useUIDL from 'hooks/useUIDL'
 import useYamlTextField from 'hooks/useYamlTextField'
 import useSelectPage from 'hooks/useSelectPage'
-import useSelectDevice from 'hooks/useSelectDevice'
+import useSelectDevice, { devices } from 'hooks/useSelectDevice'
+import useViewport from 'hooks/useViewport'
+import testData from 'data/testDataSignIn'
 import Controls from './Controls'
 import AppContext from './AppContext'
 
@@ -37,14 +42,10 @@ function App({
 }: RouteChildrenProps<{ page?: string }>) {
   const ctx = React.useContext(AppContext)
   const [{ config, baseCss, basePage }, setInitData] = React.useState<any>({})
-  const [vw, setVw] = React.useState(sizes.GalaxyS5.width)
-  const [vh, setVh] = React.useState(sizes.GalaxyS5.height)
-  const {
-    value: yml,
-    onChange: onYmlChange,
-    parsed: parsedYml,
-  } = useYamlTextField({
-    initialValue: testDataSignIn.trim(),
+  const [vw, setVw] = React.useState(devices['galaxyS5'].sizes.width)
+  const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
+  const { yml, parsedYml, setParsedYml, setYml } = useYamlTextField({
+    initialValue: testData.trim(),
   })
   const { selectedPage, selectPage } = useSelectPage({
     pages: config?.page,
@@ -60,66 +61,116 @@ function App({
     initBases().then(setInitData).catch(console.error)
   }, [])
 
-  if (!config) return null
+  console.log(parsedYml)
 
-  function setViewportWidth(value: any) {
-    if (value !== vw) setVw(value)
+  function onSelectDevice(e) {
+    selectDevice(e)
   }
 
-  function setViewportHeight(value: any) {
-    if (value !== vh) setVh(value)
+  async function onSelectPage(e) {
+    try {
+      selectPage(e)
+      const nextYml = await axios.get(
+        `${config?.baseUrl}${e.target.value}_en.yml`,
+      )
+      setYml(nextYml.data)
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  React.useEffect(() => {
+    const device = devices[selectedDevice]
+    setVw(device.sizes.width)
+    setVh(device.sizes.height)
+  }, [selectedDevice])
 
   return (
-    <Split>
-      <div
+    <>
+      <Grid
         style={{
-          width: vw,
-          height: vh,
-          position: 'absolute',
-          border: '2px solid magenta',
+          width: '100%',
+          height: '100%',
+          minHeight: '100vh',
+          overflowX: 'hidden',
         }}
+        justify="center"
+        direction={selectedDevice === 'iPad' ? 'column' : 'row'}
+        container
       >
-        <ReactUIDL
-          baseCss={baseCss}
-          basePage={basePage}
-          currentPage={parsedYml}
-          config={config}
-          components={{
-            Button,
-            Image,
-            Input,
-            Label,
-            Div: UIDLDiv,
-            Select,
+        <Grid xs={12} sm={6} md={6} lg={6} xl={6} item>
+          <Typography
+            component="div"
+            align="center"
+            variant="caption"
+            color="secondary"
+          >
+            {vw}px / {vh}px
+          </Typography>
+          <div
+            style={{
+              margin: 'auto',
+              position: 'relative',
+              width: vw,
+              height: vh,
+              border: '2px solid magenta',
+            }}
+          >
+            <ReactUIDL
+              baseCss={baseCss}
+              basePage={basePage}
+              page={parsedYml}
+              config={config}
+              components={{
+                Button,
+                Image,
+                Input,
+                Label,
+                Div: UIDLDiv,
+                Select,
+              }}
+              viewportWidth={vw}
+              viewportHeight={vh}
+            />
+          </div>
+        </Grid>
+        <Grid
+          style={{
+            paddingLeft: 12,
+            paddingRight: 12,
           }}
-          viewportWidth={vw}
-          viewportHeight={vh}
-        />
-        {ctx?.modal.opened && (
-          <Modal
-            name={ctx.modal.name}
-            isOpen={ctx.modal.opened}
-            title={ctx.modal.title}
-            subtitle={ctx.modal.subtitle}
-            close={ctx.closeModal}
+          xs={12}
+          sm={6}
+          md={6}
+          lg={6}
+          xl={6}
+          item
+        >
+          <Controls
+            viewport={{
+              width: vw,
+              height: vh,
+            }}
+            yml={yml}
+            setYml={setYml}
+            selectedPage={selectedPage}
+            selectPage={onSelectPage}
+            selectDevice={onSelectDevice}
+            selectedDevice={selectedDevice}
+            pages={config?.page}
           />
-        )}
-      </div>
-      <div style={{ width: '100%' }}>
-        <Controls
-          viewportWidth={vw}
-          viewportHeight={vh}
-          setViewportWidth={setViewportWidth}
-          setViewportHeight={setViewportHeight}
-          yml={yml}
-          onYmlChange={onYmlChange}
-          selectedPage={selectedPage}
-          selectPage={selectPage}
-          pages={config?.page}
+        </Grid>
+      </Grid>
+      {ctx?.modal.opened && (
+        <Modal
+          name={ctx.modal.name}
+          isOpen={ctx.modal.opened}
+          title={ctx.modal.title}
+          subtitle={ctx.modal.subtitle}
+          close={ctx.closeModal}
         />
-      </div>
-    </Split>
+      )}
+    </>
   )
 }
 

@@ -2,8 +2,11 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   body {
+    background: rgba(11, 12, 14, 0.8);
     margin: 0;
-    padding: 0;
+    padding: 25px;
+    overflow-x: hidden;
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;

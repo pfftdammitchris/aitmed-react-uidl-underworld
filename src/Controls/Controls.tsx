@@ -1,21 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
-import Typography from '@material-ui/core/Typography'
 import Actions from 'components/common/Actions'
 import Select from 'components/common/Select'
 import YamlEditor from 'components/YamlEditor'
-import useSelectPage, { toSelectPageOptions } from 'hooks/useSelectPage'
-import useSelectDevice, { selectDeviceOptions } from 'hooks/useSelectDevice'
-import useYamlTextField from 'hooks/useYamlTextField'
+import { toSelectPageOptions } from 'hooks/useSelectPage'
+import { selectDeviceOptions } from 'hooks/useSelectDevice'
 
 export interface ControlsProps {
   baseUrl?: string
-  viewportWidth?: number
-  viewportHeight?: number
-  setViewportWidth?: (width: number) => void
-  setViewportHeight?: (height: number) => void
+  viewport?: {
+    width: number
+    height: number
+  }
   yml?: string
-  onYmlChange?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
+  setYml?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
   selectedDevice?: string
   selectDevice?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
   selectedPage?: string
@@ -28,25 +26,15 @@ const StyledRoot = styled.div`
 `
 
 function Controls({
-  viewportWidth,
-  viewportHeight,
-  setViewportWidth,
-  setViewportHeight,
+  viewport,
   yml,
-  onYmlChange,
+  setYml,
   selectedDevice,
   selectDevice,
   selectedPage = '',
   selectPage,
   pages = [],
 }: ControlsProps) {
-  // Keeps preview in sync with size changes
-  React.useEffect(() => {
-    const { width, height } = sizes[device]
-    if (width !== viewportWidth) setViewportWidth(width)
-    if (height !== viewportHeight) setViewportHeight(height)
-  }, [setViewportWidth, setViewportHeight, viewportWidth, viewportHeight])
-
   return (
     <StyledRoot>
       <Actions>
@@ -58,9 +46,6 @@ function Controls({
           options={selectDeviceOptions}
         />
       </Actions>
-      <Typography align="center" variant="caption" color="secondary">
-        width: {viewportWidth}px height: {viewportHeight}px
-      </Typography>
       <Select
         name="page"
         label="Select Page"
@@ -68,7 +53,7 @@ function Controls({
         onChange={selectPage}
         options={toSelectPageOptions(pages)}
       />
-      <YamlEditor value={yml} onChange={onYmlChange} />
+      <YamlEditor value={yml} onChange={setYml} />
     </StyledRoot>
   )
 }

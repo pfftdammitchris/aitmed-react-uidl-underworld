@@ -10,6 +10,12 @@ const StyledYamlEditorRoot = styled.div`
     font-size: 12px;
     border-color: #fff;
   }
+  .input {
+    color: #fff;
+  }
+  .outline {
+    border-color: #fff;
+  }
 `
 
 function YamlEditor(props: any) {
@@ -20,8 +26,15 @@ function YamlEditor(props: any) {
         rows={15}
         rowsMax={30}
         variant="outlined"
-        color="default"
+        color="secondary"
         spellCheck={false}
+        InputProps={{
+          classes: {
+            root: 'input',
+            notchedOutline: 'outline',
+          },
+        }}
+        margin="dense"
         autoFocus
         multiline
         fullWidth

@@ -86,3 +86,10 @@ export function hasDecimal(value: any): boolean {
 export function hasLetter(value: any): boolean {
   return /[a-zA-Z]/i.test(String(value))
 }
+
+/**
+ * Returns true if we are in the browser environment
+ */
+export function isBrowser() {
+  return typeof window !== 'undefined'
+}

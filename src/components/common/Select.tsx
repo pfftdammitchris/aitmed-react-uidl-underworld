@@ -19,8 +19,15 @@ const StyledSelect = styled(TextField)`
   select {
     color: #fff;
   }
+  .input {
+    color: #fff;
+  }
   .outline {
     color: #fff;
+    border: 1px #fff solid;
+    &:hover {
+      border: 1px #fff solid !important;
+    }
   }
   .underline {
     color: #fff;
@@ -40,19 +47,29 @@ function Select({
 }: SelectProps) {
   return (
     <StyledSelect
-      margin="normal"
+      margin="dense"
       InputProps={{
         ...InputProps,
-        classes: { underline: 'underline', ...InputProps?.classes },
+        classes: {
+          root: 'input',
+          notchedOutline: 'outline',
+        },
       }}
       InputLabelProps={{
         ...InputLabelProps,
         classes: { root: 'label', ...InputLabelProps?.classes },
+        shrink: true,
       }}
       SelectProps={{
         ...SelectProps,
-        classes: { outlined: 'outline', ...SelectProps?.classes },
+        classes: {
+          underline: 'underline',
+          outlined: 'outlined',
+          ...SelectProps?.classes,
+        },
       }}
+      variant="outlined"
+      color="secondary"
       select
       fullWidth
       {...rest}

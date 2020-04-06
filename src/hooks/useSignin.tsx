@@ -1,5 +1,4 @@
 import React from 'react'
-import { toast } from 'react-toastify'
 import { CountryCode } from 'libphonenumber-js'
 import { prynote } from 'app/client'
 import useVerificationCode from 'hooks/useVerificationCode'
@@ -41,7 +40,7 @@ function useSignin({
       }
       if (msg) log({ msg, color: 'red' })
     }
-    return function() {
+    return function () {
       return onSubmit(options)
     }
   }
@@ -85,7 +84,6 @@ function useSignin({
       }
     } catch (error) {
       if (ctx.verification.pending) ctx.setPendingVCode?.(false)
-      toast.error(error.message)
       console.error(error)
     }
   }

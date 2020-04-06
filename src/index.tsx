@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
 import GlobalStyle from './app/GlobalStyle'
 import App from './App'
 import AppProvider from './AppProvider'

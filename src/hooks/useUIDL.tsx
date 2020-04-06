@@ -1,6 +1,5 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import {
   UIDLEndpointConfig,
   UIDLBaseCSS,
@@ -137,11 +136,9 @@ function useUIDL(
           )
         } catch (err) {
           console.error(err)
-          toast.error(err.message)
         }
       } catch (error) {
         console.error(error)
-        toast.error(error.message)
       }
     }
     if (!state.initiated && uidlEndpoint) {
@@ -179,7 +176,6 @@ function useUIDL(
             })
             .catch((err) => {
               console.error(err)
-              toast.error(`Error: ${err.message}`)
             })
         } else {
           setPage(page)

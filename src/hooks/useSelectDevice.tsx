@@ -59,6 +59,7 @@ function useSelectDevice({
     if (typeof e === 'string') {
       setSelectedDevice(e)
     } else {
+      e.persist()
       setSelectedDevice(e.target.value)
     }
   }

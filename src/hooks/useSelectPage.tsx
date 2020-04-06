@@ -19,11 +19,23 @@ function useSelectPage({
 }) {
   const [selectedPage, setSelectedPage] = React.useState(startPage)
 
-  function selectPage(page: string) {
-    if (page !== selectedPage) {
-      setSelectedPage(page)
+  function selectPage(e: React.ChangeEvent<HTMLInputElement> | string) {
+    if (typeof e === 'string') {
+      if (selectedPage !== e) {
+        setSelectedPage(e)
+      }
+    } else {
+      if (selectedPage !== e.target.value) {
+        setSelectedPage(e.target.value)
+      }
     }
   }
+
+  React.useEffect(() => {
+    if (!selectedPage && startPage) {
+      setSelectedPage(startPage)
+    }
+  }, [selectedPage, startPage])
 
   return {
     selectedPage,
