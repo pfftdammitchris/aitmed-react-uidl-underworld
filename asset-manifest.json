@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "./static/js/main.c83e350d.chunk.js",
-    "main.js.map": "./static/js/main.c83e350d.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.6b2bd169.js",
-    "runtime-main.js.map": "./static/js/runtime-main.6b2bd169.js.map",
-    "static/js/2.f277b471.chunk.js": "./static/js/2.f277b471.chunk.js",
-    "static/js/2.f277b471.chunk.js.map": "./static/js/2.f277b471.chunk.js.map",
-    "index.html": "./index.html",
-    "precache-manifest.743e5a6d9f9dd2724b6f325725ba2b63.js": "./precache-manifest.743e5a6d9f9dd2724b6f325725ba2b63.js",
-    "service-worker.js": "./service-worker.js",
-    "static/js/2.f277b471.chunk.js.LICENSE.txt": "./static/js/2.f277b471.chunk.js.LICENSE.txt"
+    "main.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/main.6e7492a5.chunk.js",
+    "main.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/main.6e7492a5.chunk.js.map",
+    "runtime-main.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/runtime-main.e79baa0c.js",
+    "runtime-main.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/runtime-main.e79baa0c.js.map",
+    "static/js/2.d7f2b4dd.chunk.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js",
+    "static/js/2.d7f2b4dd.chunk.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js.map",
+    "index.html": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/index.html",
+    "precache-manifest.511f43cf55130559426d4afd08bad63e.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/precache-manifest.511f43cf55130559426d4afd08bad63e.js",
+    "service-worker.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/service-worker.js",
+    "static/js/2.d7f2b4dd.chunk.js.LICENSE.txt": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.6b2bd169.js",
-    "static/js/2.f277b471.chunk.js",
-    "static/js/main.c83e350d.chunk.js"
+    "static/js/runtime-main.e79baa0c.js",
+    "static/js/2.d7f2b4dd.chunk.js",
+    "static/js/main.6e7492a5.chunk.js"
   ]
 }
