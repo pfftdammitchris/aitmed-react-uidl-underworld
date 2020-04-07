@@ -1,15 +1,15 @@
 image: node:latest
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
-cache:
-  paths:
-    - node_modules/
 pages:
+  stage: deploy
   script:
     - npm install
     - npm run build
+    - rm -rf public
+    - mv build public
   artifacts:
     paths:
-      - public
+      - public # mandatory, other folder won't work
   only:
-    - master
+    - master # or dev, the branch you want to publish
