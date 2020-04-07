@@ -38,7 +38,7 @@ function Select({
   InputLabelProps,
   SelectProps,
   ...rest
-}: SelectProps) {
+}: any) {
   return (
     <StyledSelect
       margin="dense"
@@ -67,7 +67,7 @@ function Select({
       fullWidth
       {...rest}
     >
-      {options.map(({ value, key = value, label }) => (
+      {options.map(({ value, key = value, label }: any) => (
         <MenuItem key={key} value={value}>
           {label}
         </MenuItem>

@@ -78,6 +78,7 @@ function Statistics({ page }: StatisticsProps) {
     }
     if (page) {
       if (Array.isArray(page.components && page.components.length)) {
+        // @ts-ignore
         setStats({
           pageName: page.pageName,
           ...getComponentStats(page.commponents),

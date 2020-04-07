@@ -1,5 +1,4 @@
 import React from 'react'
-import isArray from 'lodash/isArray'
 import { getDebugStyles } from 'utils'
 import { ComponentType } from '../../types'
 
@@ -21,7 +20,8 @@ function Div({ style, children, componentId, uidl }: DivProps) {
 
   return (
     <div id={componentId} style={styles}>
-      {isArray(children) &&
+      {Array.isArray(children) &&
+        // @ts-ignore
         children.map((child, index: number) => (
           <React.Fragment key={`uidlc-${index}`}>{child}</React.Fragment>
         ))}

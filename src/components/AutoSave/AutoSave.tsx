@@ -42,6 +42,7 @@ export function cutBy(num: number = 10, obj: any) {
   keys = keys.reverse()
   if (keys.length > num) keys.length = num
   return keys.reduce((acc, key: string) => {
+    // @ts-ignore
     acc[key] = obj[key]
     return acc
   }, {})

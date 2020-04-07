@@ -197,6 +197,7 @@ function App({
           sublabel="(Saves every 15 seconds. Maximum 8 items in stack)"
         >
           <AutoSave
+            // @ts-ignore
             storedKey={parsedYml ? parsedYml.pageName || '' : ''}
             storedObj={{ data: yml }}
             render={({ cache, id }) => {

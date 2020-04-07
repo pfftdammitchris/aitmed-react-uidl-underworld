@@ -1,6 +1,6 @@
 import React from 'react'
 import { getDebugStyles } from 'utils'
-import { ComponentRenderProps } from '@aitmed/react-uidl'
+import { ComponentProps } from '@aitmed/react-uidl'
 
 function Button({
   type,
@@ -10,7 +10,7 @@ function Button({
   src,
   uidl,
   ...rest
-}: ComponentRenderProps) {
+}: ComponentProps) {
   const styles = {
     outline: 'none',
     cursor: 'pointer',

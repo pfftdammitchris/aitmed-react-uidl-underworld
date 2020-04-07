@@ -68,11 +68,11 @@ function useUIDL({
     pageName: params?.page || '1_SignIn',
   })
 
-  function onSelectDevice(e) {
+  function onSelectDevice(e: any) {
     selectDevice(e)
   }
 
-  function onSelectPage(e) {
+  function onSelectPage(e: any) {
     selectPage(e)
   }
 
