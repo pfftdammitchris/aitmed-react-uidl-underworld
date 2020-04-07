@@ -91,21 +91,21 @@ function AutoSave({
     try {
       storedData = window.localStorage.getItem(id)
       if (storedData) storedData = JSON.parse(storedData) || {}
-      setCache(storedData)
+      // setCache(storedData)
     } catch (error) {
       console.error(error)
     }
   }, [cache, id])
 
-  React.useEffect(() => {
-    autoSaveRef.current = setInterval(() => {
-      save()
-    }, interval)
-    return function cleanup() {
-      clearInterval(autoSaveRef.current)
-    }
-    // eslint-disable-next-line
-  }, [])
+  // React.useEffect(() => {
+  //   autoSaveRef.current = setInterval(() => {
+  //     save()
+  //   }, interval)
+  //   return function cleanup() {
+  //     clearInterval(autoSaveRef.current)
+  //   }
+  //   // eslint-disable-next-line
+  // }, [])
 
   if (render) return render({ cache, id })
   if (children) {
