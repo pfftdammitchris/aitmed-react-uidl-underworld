@@ -1,195 +1,139 @@
 import React from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import {
-  UIDLEndpointConfig,
-  UIDLBaseCSS,
-  UIDLBasePage,
-} from '@aitmed/react-uidl'
-import useSignin from 'hooks/useSignin'
-import { log } from 'utils'
+import axios from 'axios'
+import { useImmer } from 'use-immer'
 import { prynote } from 'app/client'
-import useCurrentPage from './useCurrentPage'
-import AppContext from '../AppContext'
-import AuthContext from '../AuthContext'
+import useYamlEditor from 'hooks/useYamlEditor'
+import useSelectPage from 'hooks/useSelectPage'
+import useSelectDevice from 'hooks/useSelectDevice'
+import useViewport from 'hooks/useViewport'
+import { log } from '../utils/common'
 
-export type UseUIDLAction =
-  | { type: 'set-current-page'; currentPage: any }
-  | {
-      type: 'set-state'
-      initiated?: boolean
-      config?: UIDLEndpointConfig
-      baseCss?: UIDLBaseCSS
-      basePage?: UIDLBasePage
-    }
-  | { type: 'set-values'; values: any }
-  | { type: 'set-initiated'; initiated: boolean }
+const storedConfigKey = 'uidl-uw'
 
 export interface UseUIDLState {
-  initiated: boolean
-  config: null | UIDLEndpointConfig
-  baseCss: null | UIDLBaseCSS
-  basePage: null | UIDLBasePage
-  values: any
+  config: null | {
+    baseUrl: string
+    languageSuffix: { [key: string]: string }
+    fileSuffix: string
+    startPage: string
+    page: string[]
+  }
+  baseCss: null | {
+    pageName?: any
+    defaultValue?: any
+    globalVar?: any
+    classNames?: any
+  }
+  basePage: null | any
+  pages: string[]
+  initialPageYml: string
 }
 
 const initialState: UseUIDLState = {
-  initiated: false,
   config: null,
   baseCss: null,
   basePage: null,
-  values: {},
+  page: null,
+  pages: [],
+  initialPageYml: '',
 }
 
-function reducer(
-  state: UseUIDLState = initialState,
-  action: UseUIDLAction,
-): UseUIDLState {
-  switch (action.type) {
-    case 'set-initiated':
-      return { ...state, initiated: action.initiated }
-    case 'set-state': {
-      const { type, ...rest } = action
-      return { ...state, ...rest }
-    }
-    case 'set-values':
-      return { ...state, values: action.values }
-    default:
-      return state
-  }
-}
+function useUIDL({
+  baseUrl,
+  location,
+  params = {},
+  navigate,
+  uidlEndpoint,
+}: {
+  baseUrl?: string
+  location: any
+  params: { page?: string } | undefined
+  navigate: (path: string) => any
+  uidlEndpoint: string
+}) {
+  const [state, setState] = useImmer(initialState)
 
-function useUIDL(
-  {
-    location = {},
-    baseUrl: baseUrlProp = 'https://public.aitmed.com/alpha/', // temp prop
-    uidlEndpoint = '',
-    paths = {},
-  }: {
-    location?: { hostname?: string; pathname?: string; search?: any }
-    baseUrl?: string
-    uidlEndpoint: string
-    paths: { [key: string]: string }
-  } = { uidlEndpoint: '', paths: {} },
-) {
-  const [state, dispatch] = React.useReducer(reducer, initialState)
-  const { page: currentPage, setPage } = useCurrentPage({ page: null })
-  const { push: navigate, goBack, goForward } = useHistory()
-  const params = useParams<{ page?: string }>()
-  const appCtx = React.useContext(AppContext)
-
-  const { createOnSubmit: createOnSigninSubmit } = useSignin({
-    onVerificationCodeSent: ({ phoneNumber }: any = {}) =>
-      appCtx?.openModal?.({
-        name: 'verification.code',
-        title: 'Verification Code',
-        subtitle: `Please input the verification code we sent to: ${phoneNumber}`,
-      }),
-    onSigninSuccess: () => {
-      navigate('/5_Dashboard')
-      appCtx?.closeModal?.()
-    },
+  const { yml, parsedYml, setYml } = useYamlEditor({
+    initialValue: '',
   })
 
-  const createUrl = React.useCallback(
-    (path: string, locale: string = '') => `${baseUrlProp}${path}${locale}.yml`,
-    [baseUrlProp],
-  )
+  const {
+    selectedDevice,
+    selectDevice,
+    selectDeviceOptions,
+  } = useSelectDevice({ initialValue: 'galaxyS5' })
 
-  function onClickDashboard() {
-    navigate(`/${paths.dashboard}`)
+  const { selectedPage, selectPage } = useSelectPage({
+    name: params?.page || '1_SignIn',
+    pages: state.pages,
+    navigate,
+  })
+
+  function onSelectDevice(e) {
+    selectDevice(e)
   }
 
-  function onClickVerificationCode() {
-    navigate(`/${paths.verificationCode}`)
+  function onSelectPage(e) {
+    selectPage(e)
   }
 
-  // Initiate the UI
   React.useEffect(() => {
-    async function fetchUIDL() {
-      try {
-        const config = await prynote.uidl.getUIDL(uidlEndpoint)
-        const { baseUrl, startPage } = config
-        const reqUris = [
-          `${baseUrl}${paths.baseCss}.yml`,
-          `${baseUrl}${paths.basePage}_en.yml`,
-        ]
-        if (paths.current) {
-          reqUris.push(`${baseUrl}${paths.current}_en.yml`)
+    async function init() {
+      let config: any
+      if (typeof window !== 'undefined') {
+        config = window.localStorage.getItem(storedConfigKey)
+        if (config) {
+          config = JSON.parse(config)
         } else {
-          reqUris.push(`${baseUrl}${startPage}_en.yml`)
+          config = await prynote.uidl.getUIDL(uidlEndpoint)
+          window.localStorage.setItem(storedConfigKey, JSON.stringify(config))
         }
-        const reqs = reqUris.map((uri: string) => prynote.uidl.getUIDL(uri))
-        const [baseCss, basePage, fetchedPage] = await Promise.all(reqs)
-        if (fetchedPage) {
-          setPage(fetchedPage)
-          dispatch({
-            type: 'set-state',
-            config,
-            baseCss,
-            basePage,
-          })
+        const { baseUrl = '', page: pages = [] } = config
+        const baseCss = await prynote.uidl.getUIDL(`${baseUrl}BaseCSS.yml`)
+        const basePage = await prynote.uidl.getUIDL(`${baseUrl}BasePage_en.yml`)
+        if (location?.pathname === '/') {
+          navigate(config.startPage || '1_SignIn')
         }
-        try {
-          window.localStorage.setItem(
-            paths.current,
-            JSON.stringify(fetchedPage),
-          )
-        } catch (err) {
-          console.error(err)
-        }
+        setState((draft) => {
+          draft.config = config
+          draft.baseCss = baseCss
+          draft.basePage = basePage
+          draft.pages = pages
+        })
+      }
+    }
+    init()
+    // eslint-disable-next-line
+  }, [])
+
+  React.useEffect(() => {
+    async function getUIDL() {
+      try {
+        const url = `${state.config?.baseUrl || baseUrl}${selectedPage}_en.yml`
+        const { data: pageYml } = await axios.get(url)
+        setYml(pageYml)
       } catch (error) {
         console.error(error)
+        window.alert(error.message)
       }
     }
-    if (!state.initiated && uidlEndpoint) {
-      fetchUIDL()
-      dispatch({ type: 'set-initiated', initiated: true })
-    }
-  }, [currentPage, paths, setPage, state.initiated, uidlEndpoint])
-
-  // Keeps UI updating as the route updates
-  React.useEffect(() => {
-    const pagePath = params.page
-    if (pagePath) {
-      // const pagePath = params?.page || ''
-      const locale = '_en'
-      let page: any = window.localStorage.getItem(pagePath)
-      try {
-        // Check if they have it stored in cache. Use it if so
-        page = JSON.parse(page)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        if (!page) {
-          // Fetch a fresh page from server
-          prynote.uidl
-            .getUIDL(createUrl(pagePath, locale))
-            .then((newPage) => {
-              if (newPage) {
-                log({
-                  msg: 'Fetched new page',
-                  color: 'magenta',
-                  data: newPage,
-                })
-              }
-              setPage(newPage)
-            })
-            .catch((err) => {
-              console.error(err)
-            })
-        } else {
-          setPage(page)
-        }
-      }
-    }
-  }, [createUrl, params, setPage])
+    log({ msg: `Fetching uidl page "${selectedPage}"`, color: '#a80a7a' })
+    getUIDL()
+    // eslint-disable-next-line
+  }, [selectedPage])
 
   return {
     ...state,
-    currentPage,
-    onClickDashboard,
-    onClickVerificationCode,
-    createOnSigninSubmit,
+    selectDevice,
+    selectedDevice,
+    selectDeviceOptions,
+    selectPage,
+    selectedPage,
+    yml,
+    parsedYml,
+    setYml,
+    onSelectDevice,
+    onSelectPage,
   }
 }
 

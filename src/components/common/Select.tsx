@@ -17,24 +17,18 @@ export interface SelectProps extends MuiSelectProps {
 const StyledSelect = styled(TextField)`
   option,
   select {
-    color: #fff;
+    color: #333;
   }
   .input {
-    color: #fff;
+    color: #333;
+    box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
   }
   .outline {
-    color: #fff;
-    border: 1px #fff solid;
-    &:hover {
-      border: 1px #fff solid !important;
-    }
-  }
-  .underline {
-    color: #fff;
-    border-color: #fff;
+    color: #333;
+    border: 1px #37506c solid;
   }
   .label {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7);
   }
 `
 
@@ -63,7 +57,6 @@ function Select({
       SelectProps={{
         ...SelectProps,
         classes: {
-          underline: 'underline',
           outlined: 'outlined',
           ...SelectProps?.classes,
         },

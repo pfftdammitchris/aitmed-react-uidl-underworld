@@ -3,21 +3,19 @@ import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
 
 const StyledYamlEditorRoot = styled.div`
-  outline: none;
   textarea {
-    outline: none;
-    color: #fff;
-    font-size: 12px;
-    border-color: #fff;
-  }
-  .label {
-    color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    font-size: 13px;
   }
   .input {
-    color: #fff;
+    color: #333;
+    box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
+  }
+  .label {
+    color: rgba(0, 0, 0, 0.7);
   }
   .notchedOutline {
-    border-color: #fff;
+    border-color: #37506c;
   }
 `
 

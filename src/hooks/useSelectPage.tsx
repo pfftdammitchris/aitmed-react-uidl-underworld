@@ -21,7 +21,7 @@ function useSelectPage({
   onChange?: (page: string) => void
   navigate: (to: string) => void
 }) {
-  const [current, setCurrent] = React.useState(name)
+  const [selectedPage, setSelectedPage] = React.useState(name)
 
   const selectPage = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement> | string) => {
@@ -35,14 +35,14 @@ function useSelectPage({
   )
 
   React.useEffect(() => {
-    if (current !== name) {
-      setCurrent(name)
+    if (selectedPage !== name) {
+      setSelectedPage(name)
       if (onChange) onChange(name)
     }
-  }, [current, name, onChange])
+  }, [selectedPage, name, onChange])
 
   return {
-    current,
+    selectedPage,
     selectPage,
     selectPageOptions: toSelectPageOptions(pages),
   }
