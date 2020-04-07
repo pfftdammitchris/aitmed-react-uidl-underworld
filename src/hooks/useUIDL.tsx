@@ -90,9 +90,9 @@ function useUIDL({
         const { baseUrl = '', page: pages = [] } = config
         const baseCss = await prynote.uidl.getUIDL(`${baseUrl}BaseCSS.yml`)
         const basePage = await prynote.uidl.getUIDL(`${baseUrl}BasePage_en.yml`)
-        if (location?.pathname === '/') {
-          navigate(config.startPage || '1_SignIn')
-        }
+        // if (location?.pathname === '/') {
+        //   navigate(config.startPage || '1_SignIn')
+        // }
 
         setState((draft) => {
           draft.config = config

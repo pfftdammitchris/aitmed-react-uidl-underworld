@@ -23,23 +23,24 @@ function useSelectPage({
 }) {
   const [selectedPage, setSelectedPage] = React.useState(name)
 
-  const selectPage = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement> | string) => {
-      if (typeof e === 'string') {
-        navigate('/' + e)
-      } else {
-        navigate('/' + e.target.value)
-      }
-    },
-    [navigate],
-  )
+  // const selectPage = React.useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement> | string) => {
+  //     if (typeof e === 'string') {
+  //       navigate('/' + e)
+  //     } else {
+  //       navigate('/' + e.target.value)
+  //     }
+  //   },
+  //   [navigate],
+  // )
 
-  React.useEffect(() => {
-    if (selectedPage !== name) {
-      setSelectedPage(name)
-      if (onChange) onChange(name)
+  function selectPage(e: React.ChangeEvent<HTMLInputElement> | string) {
+    if (typeof e === 'string') {
+      setSelectedPage(e)
+    } else {
+      setSelectedPage(e.target.value)
     }
-  }, [selectedPage, name, onChange])
+  }
 
   return {
     selectedPage,
