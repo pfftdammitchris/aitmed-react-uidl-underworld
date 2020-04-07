@@ -5,7 +5,6 @@ import { prynote } from 'app/client'
 import useYamlEditor from 'hooks/useYamlEditor'
 import useSelectPage from 'hooks/useSelectPage'
 import useSelectDevice from 'hooks/useSelectDevice'
-import useViewport from 'hooks/useViewport'
 import { log } from '../utils/common'
 
 const storedConfigKey = 'uidl-uw'
@@ -33,7 +32,6 @@ const initialState: UseUIDLState = {
   config: null,
   baseCss: null,
   basePage: null,
-  page: null,
   pages: [],
   initialPageYml: '',
 }
@@ -53,10 +51,6 @@ function useUIDL({
 }) {
   const [state, setState] = useImmer(initialState)
 
-  const { yml, parsedYml, setYml } = useYamlEditor({
-    initialValue: '',
-  })
-
   const {
     selectedDevice,
     selectDevice,
@@ -67,6 +61,11 @@ function useUIDL({
     name: params?.page || '1_SignIn',
     pages: state.pages,
     navigate,
+  })
+
+  const { yml, parsedYml, setYml } = useYamlEditor({
+    initialValue: '',
+    pageName: params?.page || '1_SignIn',
   })
 
   function onSelectDevice(e) {
@@ -94,6 +93,7 @@ function useUIDL({
         if (location?.pathname === '/') {
           navigate(config.startPage || '1_SignIn')
         }
+
         setState((draft) => {
           draft.config = config
           draft.baseCss = baseCss

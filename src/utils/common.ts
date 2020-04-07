@@ -51,7 +51,7 @@ export function log(msg: any, style?: any, obj?: any) {
     }
     if (obj) args.push(obj)
   }
-  console.log(...args)
+  console.log.bind(window.console, ...args)
 }
 
 /**

@@ -23,9 +23,18 @@ import { useImmer } from 'use-immer'
 const initialState = {
   yml: '',
   parsedYml: {},
+  cache: {},
 }
 
-function useYamlEditor({ initialValue = '', delay: delayProp = 50 }) {
+function useYamlEditor({
+  initialValue = '',
+  delay: delayProp = 50,
+  pageName,
+}: {
+  initialValue?: string
+  delay?: number
+  pageName?: string
+}) {
   const [state, setState] = useImmer(initialState)
   const [delay, setDelay] = React.useState(delayProp)
 

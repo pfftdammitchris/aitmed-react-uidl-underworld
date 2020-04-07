@@ -42,10 +42,6 @@ function Image({
   if (!children) {
     return <img src={src} alt="" style={styles} {...rest} />
   } else if (children.props?.uidl?.component) {
-    console.log(children.props.uidl.component)
-    console.log(children.props.uidl.component)
-    console.log(children.props.uidl.component)
-    console.log(children.props.uidl.component)
     child = uidl?.parseComponent(children.props.uidl.component)
   }
 
@@ -53,6 +49,7 @@ function Image({
     <div style={{ ...styles, position: 'relative' }}>
       <img
         src={src}
+        title={src}
         alt=""
         style={{ border: '1px solid red', width: '100%', height: '100%' }}
         {...rest}

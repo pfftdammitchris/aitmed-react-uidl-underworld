@@ -5,14 +5,20 @@ import Grid from '@material-ui/core/Grid'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
+import YamlEditor from 'components/YamlEditor'
+import AutoSave from 'components/AutoSave'
+import Board from 'components/Board'
+import Actions from 'components/common/Actions'
+import Select from 'components/common/Select'
 import Button from 'components/uidl/Button'
 import Image from 'components/uidl/Image'
 import Input from 'components/uidl/Input'
 import Label from 'components/uidl/Label'
 import Div from 'components/uidl/Div'
-import Select from 'components/uidl/Select'
+import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
-import { devices } from 'hooks/useSelectDevice'
+import { devices, DeviceKey } from 'hooks/useSelectDevice'
+import { toSelectPageOptions } from 'hooks/useSelectPage'
 import { log } from './utils/common'
 import Controls from './Controls'
 
@@ -39,14 +45,14 @@ function App({
   const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
   const theme = useTheme()
   const isWidescreen = useMediaQuery(theme.breakpoints.only('xl'))
-
-  console.log('isWidescreen:', isWidescreen)
   const {
     config,
     baseCss,
     basePage,
     pages,
+    selectDevice,
     selectedDevice,
+    selectDeviceOptions,
     selectedPage,
     initialPageYml,
     yml,
@@ -63,7 +69,7 @@ function App({
   })
 
   React.useEffect(() => {
-    const device = devices[selectedDevice]
+    const device = devices[selectedDevice as DeviceKey]
     setVw(device.sizes.width)
     setVh(device.sizes.height)
   }, [selectedDevice])
@@ -89,7 +95,55 @@ function App({
       direction={selectedDevice === 'iPad' && !isWidescreen ? 'column' : 'row'}
       container
     >
-      <Grid xs={12} sm={12} md={6} lg={4} xl={5} item>
+      <Grid xs={12} sm={6} md={6} lg={4} xl={5} item>
+        <Board
+          component={Grid}
+          label="Component Board"
+          sublabel="Draggable components"
+          height="60%"
+        />
+      </Grid>
+      <Grid
+        style={{
+          paddingLeft: 12,
+          paddingRight: 12,
+          overflow: 'hidden',
+        }}
+        xs={12}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={5}
+        item
+      >
+        <Actions>
+          <Select
+            name="device"
+            label="Select Device"
+            value={selectedDevice}
+            onChange={selectDevice}
+            options={selectDeviceOptions}
+          />
+        </Actions>
+        <Select
+          name="page"
+          label="Select Page"
+          value={selectedPage}
+          onChange={onSelectPage}
+          options={toSelectPageOptions(pages)}
+        />
+        <Board label="Functions" sublabel="Detected Functions" />
+        <Board label="Assets" sublabel="Detected Assets" />
+      </Grid>
+      <Grid
+        style={{ overflow: 'hidden' }}
+        xs={12}
+        sm={12}
+        md={6}
+        lg={4}
+        xl={5}
+        item
+      >
         <Typography
           component="div"
           align="center"
@@ -118,7 +172,7 @@ function App({
               Input,
               Label,
               Div: UIDLDiv,
-              Select,
+              Select: UIDLSelect,
             }}
             viewportWidth={vw}
             viewportHeight={vh}
@@ -137,20 +191,21 @@ function App({
         xl={5}
         item
       >
-        <Controls
-          viewport={{
-            width: vw,
-            height: vh,
-          }}
-          yml={yml || initialPageYml}
-          setYml={setYml}
-          selectPage={onSelectPage}
-          selectedPage={selectedPage}
-          selectDevice={onSelectDevice}
-          selectedDevice={selectedDevice}
-          page={parsedYml}
-          pages={pages}
-        />
+        <YamlEditor value={yml} onChange={setYml} />
+        <Board
+          label="History"
+          sublabel="(Saves every 15 seconds. Maximum 8 items in stack)"
+        >
+          <AutoSave
+            storedKey={parsedYml ? parsedYml.pageName || '' : ''}
+            storedObj={{ data: yml }}
+            render={({ cache, id }) => {
+              console.log('autosave cache: ', cache)
+              console.log('autosave id: ', id)
+              return null
+            }}
+          />
+        </Board>
       </Grid>
     </Grid>
   )
