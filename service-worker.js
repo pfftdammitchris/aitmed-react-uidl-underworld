@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/precache-manifest.7b3918b0a2df85ae0f31483cd09c419f.js"
+  "/aitmed-react-uidl-underworld/precache-manifest.8c31857b2249c44c0ba8c5c77cb5eb65.js"
 );
 
 self.addEventListener('message', (event) => {
@@ -33,7 +33,7 @@ workbox.core.clientsClaim();
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/index.html"), {
+workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/aitmed-react-uidl-underworld/index.html"), {
   
   blacklist: [/^\/_/,/\/[^/?]+\.[^/]+$/],
 });
