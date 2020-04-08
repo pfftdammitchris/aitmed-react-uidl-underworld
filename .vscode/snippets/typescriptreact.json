@@ -1,0 +1,55 @@
+{
+  "debug console.log": {
+    "prefix": "dlog",
+    "body": "import { log } from 'utils'"
+  },
+  "toast": {
+    "prefix": "toast",
+    "body": "import { toast } from 'react-toastify'"
+  },
+  "import button": {
+    "prefix": "btt",
+    "body": "import Button from '@material-ui/core/Button'"
+  },
+  "import grid": {
+    "prefix": "grid",
+    "body": "import Grid from '@material-ui/core/Grid'"
+  },
+  "import paper": {
+    "prefix": "paper",
+    "body": "import Paper from '@material-ui/core/Paper'"
+  },
+  "import textfield": {
+    "prefix": "textfield",
+    "body": "import TextField from '@material-ui/core/TextField'"
+  },
+  "import Actions component": {
+    "prefix": "act",
+    "body": "import Actions from 'components/common/Actions'"
+  },
+  "import Select component": {
+    "prefix": "select",
+    "body": "import Select from 'components/common/Select'"
+  },
+  "component": {
+    "prefix": "newcomponent",
+    "body": [
+      "import React from 'react'",
+      "import styled from 'styled-components'",
+      "",
+      "export interface $1Props {",
+      "  //",
+      "}",
+      "",
+      "const StyledRoot = styled.div`",
+      "  $2",
+      "`",
+      "",
+      "function $1(props: $1Props) {",
+      "  return <StyledRoot />",
+      "}",
+      "",
+      "export default $1"
+    ]
+  }
+}

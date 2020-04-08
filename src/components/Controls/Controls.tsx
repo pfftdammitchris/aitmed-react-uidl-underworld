@@ -16,7 +16,7 @@ export interface ControlsProps {
 
 function Controls({ device, page }: ControlsProps) {
   return (
-    <>
+    <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
       {device && (
         <Select
           name="device"
@@ -24,8 +24,10 @@ function Controls({ device, page }: ControlsProps) {
           value={device.selected}
           onChange={device.select}
           options={device.selectOptions}
+          inline
         />
       )}
+      <div style={{ width: 10 }} />
       {page && (
         <Select
           name="page"
@@ -33,9 +35,10 @@ function Controls({ device, page }: ControlsProps) {
           value={page.selected}
           onChange={page.select}
           options={page.selectOptions}
+          inline
         />
       )}
-    </>
+    </div>
   )
 }
 

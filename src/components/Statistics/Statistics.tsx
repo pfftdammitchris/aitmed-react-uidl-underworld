@@ -2,29 +2,61 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import styled from 'styled-components'
 import { UIDLComponent } from '@aitmed/react-uidl'
+import { useImmer } from 'use-immer'
 import { log } from 'utils'
 
 export interface StatisticsProps {
   page?: any
 }
 
+export interface PageStatistics {
+  components: Record<string, UIDLComponent>
+  componentIds: string[]
+  functions: Record<string, string[]>
+  assets: Record<string, string[]>
+  types: Record<string, string[]>
+}
+
 const StyledRoot = styled(Typography)``
 
 const initialStats = {
   pageName: '',
-  components: {
-    types: {},
-    ids: [],
-    nodes: {},
-  },
-  assets: {
-    paths: [],
-  },
-  functions: [],
+  components: {},
+  componentIds: [],
+  assets: {},
+  functions: {},
+  types: {},
 }
 
 function Statistics({ page }: StatisticsProps) {
-  const [stats, setStats] = React.useState(null)
+  const [stats, setStats] = useImmer(initialStats)
+
+  function extract(components) {
+    if (Array.isArray(components)) {
+      setStats((draft) => {
+        components.forEach((component) => {
+          const { componentId, resource, path, onClick, onHover, type } = component
+          draft.components[componentId] = component
+          if (!draft['componentIds'].includes(componentId)) {
+            draft.componentIds.push(componentId)
+          }
+
+          if (resource || path) {
+            if (!(draft.assets[componentId])) {
+              draft.assets[componentId] = {}
+              if (resource) draft.assets[]
+            } else {
+              if (resource) 
+            }
+          }
+
+          if (!(draft.assets[componentId])) {
+            
+          }
+        })
+      })
+    }
+  }
 
   React.useEffect(() => {
     function getComponentStats(

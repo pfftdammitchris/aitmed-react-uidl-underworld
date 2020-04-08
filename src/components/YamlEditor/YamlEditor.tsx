@@ -8,14 +8,15 @@ const StyledYamlEditorRoot = styled.div`
     font-size: 13px;
   }
   .input {
-    color: #333;
     box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
+    padding-top: 16px;
   }
   .label {
     color: rgba(0, 0, 0, 0.7);
   }
   .notchedOutline {
-    border-color: #37506c;
+    /* border-color: #37506c; */
+    border: 1px #37506c solid;
   }
 `
 
@@ -45,7 +46,6 @@ function YamlEditor(props: {
           },
         }}
         margin="normal"
-        autoFocus
         multiline
         fullWidth
         {...props}

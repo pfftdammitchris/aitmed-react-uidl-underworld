@@ -1,8 +1,8 @@
 import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
+import styled from 'styled-components'
 import ReactUIDL from '@aitmed/react-uidl'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
@@ -17,8 +17,9 @@ import Label from 'components/uidl/Label'
 import Div from 'components/uidl/Div'
 import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
+import Controls from 'components/Controls'
 import { devices, DeviceKey } from 'hooks/useSelectDevice'
-import Controls from './Controls'
+import Documentation from 'components/Documentation'
 import { log } from './utils/common'
 
 const baseUrl = 'https://public.aitmed.com/alpha/'
@@ -35,6 +36,12 @@ function UIDLDiv({ style, ...props }: any) {
   return <Div style={styles} {...props} />
 }
 
+const StyledDocumentation = styled.div`
+  padding-top: 12px;
+  background: rgba(55, 61, 73, 0.975);
+  box-sizing: border-box;
+`
+
 function App({
   history,
   location,
@@ -48,19 +55,15 @@ function App({
     config,
     baseCss,
     basePage,
-    pages,
     selectDevice,
     selectedDevice,
     selectDeviceOptions,
     selectedPage,
     selectPage,
     selectPageOptions,
-    initialPageYml,
     yml,
     parsedYml,
     setYml,
-    onSelectDevice,
-    onSelectPage,
   } = useUIDL({
     baseUrl,
     uidlEndpoint,
@@ -85,170 +88,97 @@ function App({
   }
 
   return (
-    <Grid
-      style={{
-        width: '100%',
-        height: '100%',
-        minHeight: '100vh',
-        overflowX: 'hidden',
-      }}
-      justify="center"
-      direction={selectedDevice === 'iPad' && !isWidescreen ? 'column' : 'row'}
-      container
-    >
-      <Panel
-        label="Functions"
-        sublabel="Detected Functions"
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      />
-      <Panel
-        label="Assets"
-        sublabel="Detected Assets"
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      >
-        <Paper
-          style={{
-            padding: 25,
-            minHeight: 100,
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-          }}
-          elevation={0}
-        />
-      </Panel>
-      <Panel label="Component Board" xs={12} sm={6} md={6} lg={4} xl={5} item>
-        <Paper
-          style={{
-            padding: 25,
-            minHeight: 100,
-          }}
-          elevation={0}
-        />
-      </Panel>
-      <Panel
-        style={{
-          paddingLeft: 12,
-          paddingRight: 12,
-          overflow: 'hidden',
-        }}
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      >
-        <Controls
-          device={{
-            selected: selectedDevice,
-            select: selectDevice,
-            selectOptions: selectDeviceOptions,
-          }}
-          page={{
-            selected: selectedPage,
-            select: selectPage,
-            selectOptions: selectPageOptions,
-          }}
-        />
-      </Panel>
-      <Panel xs={12} sm={6} md={6} lg={6} xl={5} item>
-        <Typography
-          component="div"
-          align="center"
-          variant="caption"
-          color="secondary"
-        >
-          {vw}px / {vh}px
-        </Typography>
-        <div
-          style={{
-            margin: 'auto',
-            position: 'relative',
-            width: vw,
-            height: vh,
-            border: '2px solid magenta',
-          }}
-        >
-          <ReactUIDL
-            baseCss={baseCss}
-            basePage={basePage}
-            page={parsedYml}
-            config={config}
-            components={{
-              Button,
-              Image,
-              Input,
-              Label,
-              Div: UIDLDiv,
-              Select: UIDLSelect,
+    <>
+      <StyledDocumentation>
+        <Grid spacing={10} justify="center" container>
+          <Panel
+            label="What's supported?"
+            sublabel="Texts in purple represent keys"
+            textColor="#fafafa"
+            style={{
+              paddingLeft: 12,
+              paddingRight: 12,
+              overflow: 'hidden',
             }}
-            viewportWidth={vw}
-            viewportHeight={vh}
+            xs={10}
+            sm={10}
+            md={6}
+            lg={5}
+            xl={5}
+            item
+          >
+            <Documentation />
+          </Panel>
+        </Grid>
+      </StyledDocumentation>
+      <div style={{ height: 50 }} />
+      <Grid
+        style={{
+          width: '100%',
+          height: '100%',
+          minHeight: '100vh',
+          overflowX: 'hidden',
+        }}
+        justify="center"
+        direction={
+          selectedDevice === 'iPad' && !isWidescreen ? 'column' : 'row'
+        }
+        container
+      >
+        <Panel xs={12} sm={6} md={5} lg={5} xl={5} item>
+          <Typography
+            component="div"
+            align="center"
+            variant="caption"
+            color="secondary"
+          >
+            {vw}px / {vh}px
+          </Typography>
+          <div
+            style={{
+              margin: 'auto',
+              position: 'relative',
+              width: vw,
+              height: vh,
+              border: '2px solid magenta',
+            }}
+          >
+            <ReactUIDL
+              baseCss={baseCss}
+              basePage={basePage}
+              page={parsedYml}
+              config={config}
+              components={{
+                Button,
+                Image,
+                Input,
+                Label,
+                Div: UIDLDiv,
+                Select: UIDLSelect,
+              }}
+              viewportWidth={vw}
+              viewportHeight={vh}
+            />
+          </div>
+        </Panel>
+        <Panel xs={12} sm={6} md={7} lg={7} xl={5} item>
+          <Controls
+            device={{
+              selected: selectedDevice,
+              select: selectDevice,
+              selectOptions: selectDeviceOptions,
+            }}
+            page={{
+              selected: selectedPage,
+              select: selectPage,
+              selectOptions: selectPageOptions,
+            }}
           />
-        </div>
-      </Panel>
-      <Panel
-        style={{
-          paddingLeft: 12,
-          paddingRight: 12,
-        }}
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      >
-        <YamlEditorToolbar />
-        <YamlEditor value={yml} onChange={setYml} />
-      </Panel>
-      <Panel
-        style={{
-          paddingLeft: 12,
-          paddingRight: 12,
-        }}
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      />
-      <Panel
-        label="History"
-        sublabel="(Saves every 15 seconds. Maximum 8 items in stack)"
-        style={{
-          paddingLeft: 12,
-          paddingRight: 12,
-        }}
-        xs={12}
-        sm={6}
-        md={6}
-        lg={6}
-        xl={5}
-        item
-      >
-        <AutoSave
-          // @ts-ignore
-          storedKey={parsedYml ? parsedYml.pageName || '' : ''}
-          storedObj={{ data: yml }}
-          render={({ cache, id }) => {
-            console.log('autosave cache: ', cache)
-            console.log('autosave id: ', id)
-            return null
-          }}
-        />
-      </Panel>
-    </Grid>
+          {/* <YamlEditorToolbar /> */}
+          <YamlEditor value={yml} onChange={setYml} />
+        </Panel>
+      </Grid>
+    </>
   )
 }
 

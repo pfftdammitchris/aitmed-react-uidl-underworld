@@ -40,7 +40,7 @@ function Select({
 }: any) {
   return (
     <StyledSelect
-      margin="normal"
+      margin="dense"
       InputProps={{
         ...InputProps,
         classes: {
@@ -63,7 +63,6 @@ function Select({
       variant="outlined"
       color="secondary"
       select
-      fullWidth
       {...rest}
     >
       {options.map(({ value, key = value, label }: any) => (

@@ -49,6 +49,7 @@ function Input({
   if (type.indexOf('.') !== -1) {
     const narrowedType = type.split('.')?.[1]
     if (narrowedType === 'date') props.type = 'date'
+    if (narrowedType === 'search') props.type = 'search'
   }
 
   function onChange(e: React.ChangeEvent<any>) {

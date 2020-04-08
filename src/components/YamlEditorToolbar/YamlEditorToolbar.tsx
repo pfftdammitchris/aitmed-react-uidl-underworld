@@ -10,9 +10,13 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import MarkunreadIcon from '@material-ui/icons/Markunread'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
 
 const StyledToolbar = styled(Toolbar)`
-  margin: auto;
+  flex-wrap: wrap;
 `
 
 function ToolbarButton({ children, ...props }: any) {
@@ -47,6 +51,18 @@ function YamlEditorToolbar(props) {
         </ToolbarButton>
         <ToolbarButton>
           <ZoomOutMapIcon />
+        </ToolbarButton>
+        <ToolbarButton>
+          <DeleteForeverIcon />
+        </ToolbarButton>
+        <ToolbarButton>
+          <MarkunreadIcon />
+        </ToolbarButton>
+        <ToolbarButton>
+          <PersonAddIcon />
+        </ToolbarButton>
+        <ToolbarButton>
+          <PictureAsPdfIcon />
         </ToolbarButton>
       </StyledToolbar>
     </AppBar>

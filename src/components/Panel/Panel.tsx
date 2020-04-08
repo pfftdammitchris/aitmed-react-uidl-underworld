@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 export interface PanelProps extends GridProps {
   label?: React.ReactNode
   sublabel?: React.ReactNode
+  textColor?: string
 }
 
 const StyledRoot = styled(Grid)`
@@ -15,7 +16,6 @@ const StyledRoot = styled(Grid)`
 `
 
 const StyledLabel = styled(Typography)`
-  color: rgba(0, 0, 0, 0.5);
   text-align: center;
   width: 100%;
   display: block;
@@ -28,14 +28,12 @@ const StyledLabel = styled(Typography)`
 function PanelHeader({
   label,
   sublabel,
-}: {
-  label?: React.ReactNode
-  sublabel?: React.ReactNode
-}) {
+  textColor = 'rgba(0, 0, 0, 0.5)',
+}: Partial<PanelProps>) {
   return sublabel ? (
-    <StyledLabel variant="h6">
+    <StyledLabel style={{ color: textColor }} variant="h6">
       <Typography variant="button">{label}</Typography>
-      <Typography className="sublabel" variant="caption">
+      <Typography className="sublabel" variant="caption" paragraph>
         {sublabel}
       </Typography>
     </StyledLabel>
@@ -44,10 +42,16 @@ function PanelHeader({
   ) : null
 }
 
-function Panel({ label, sublabel, children, ...rest }: PanelProps) {
+function Panel({
+  label,
+  sublabel,
+  textColor = 'light',
+  children,
+  ...rest
+}: PanelProps) {
   return (
     <StyledRoot {...rest}>
-      <PanelHeader label={label} sublabel={sublabel} />
+      <PanelHeader textColor={textColor} label={label} sublabel={sublabel} />
       {children && <Typography component="div">{children}</Typography>}
     </StyledRoot>
   )
