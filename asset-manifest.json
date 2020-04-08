@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/aitmed-react-uidl-underworld/static/js/main.c63ce79f.chunk.js",
-    "main.js.map": "/aitmed-react-uidl-underworld/static/js/main.c63ce79f.chunk.js.map",
+    "main.js": "/aitmed-react-uidl-underworld/static/js/main.fad5c567.chunk.js",
+    "main.js.map": "/aitmed-react-uidl-underworld/static/js/main.fad5c567.chunk.js.map",
     "runtime-main.js": "/aitmed-react-uidl-underworld/static/js/runtime-main.75bcaf87.js",
     "runtime-main.js.map": "/aitmed-react-uidl-underworld/static/js/runtime-main.75bcaf87.js.map",
-    "static/js/2.f1b427ac.chunk.js": "/aitmed-react-uidl-underworld/static/js/2.f1b427ac.chunk.js",
-    "static/js/2.f1b427ac.chunk.js.map": "/aitmed-react-uidl-underworld/static/js/2.f1b427ac.chunk.js.map",
+    "static/js/2.2e330d78.chunk.js": "/aitmed-react-uidl-underworld/static/js/2.2e330d78.chunk.js",
+    "static/js/2.2e330d78.chunk.js.map": "/aitmed-react-uidl-underworld/static/js/2.2e330d78.chunk.js.map",
     "index.html": "/aitmed-react-uidl-underworld/index.html",
-    "precache-manifest.aa4cd505356aa2d0e247ecb5d0386c28.js": "/aitmed-react-uidl-underworld/precache-manifest.aa4cd505356aa2d0e247ecb5d0386c28.js",
+    "precache-manifest.fb8cdef4d8a2de7da136b86d92258bce.js": "/aitmed-react-uidl-underworld/precache-manifest.fb8cdef4d8a2de7da136b86d92258bce.js",
     "service-worker.js": "/aitmed-react-uidl-underworld/service-worker.js",
-    "static/js/2.f1b427ac.chunk.js.LICENSE.txt": "/aitmed-react-uidl-underworld/static/js/2.f1b427ac.chunk.js.LICENSE.txt"
+    "static/js/2.2e330d78.chunk.js.LICENSE.txt": "/aitmed-react-uidl-underworld/static/js/2.2e330d78.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.75bcaf87.js",
-    "static/js/2.f1b427ac.chunk.js",
-    "static/js/main.c63ce79f.chunk.js"
+    "static/js/2.2e330d78.chunk.js",
+    "static/js/main.fad5c567.chunk.js"
   ]
 }
