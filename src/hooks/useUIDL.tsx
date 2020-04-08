@@ -58,14 +58,14 @@ function useUIDL({
   } = useSelectDevice({ initialValue: 'galaxyS5' })
 
   const { selectedPage, selectPage } = useSelectPage({
-    name: params?.page || '1_SignIn',
+    name: '1_SignIn',
     pages: state.pages,
     navigate,
   })
 
   const { yml, parsedYml, setYml } = useYamlEditor({
     initialValue: '',
-    pageName: params?.page || '1_SignIn',
+    pageName: selectedPage,
   })
 
   function onSelectDevice(e: any) {
