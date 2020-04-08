@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/aitmed-react-uidl-underworld/precache-manifest.8c31857b2249c44c0ba8c5c77cb5eb65.js"
+  "/aitmed-react-uidl-underworld/precache-manifest.7aeb3ffc5602dfa5de99146ef74f0330.js"
 );
 
 self.addEventListener('message', (event) => {
