@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/main.6e7492a5.chunk.js",
-    "main.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/main.6e7492a5.chunk.js.map",
-    "runtime-main.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/runtime-main.e79baa0c.js",
-    "runtime-main.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/runtime-main.e79baa0c.js.map",
-    "static/js/2.d7f2b4dd.chunk.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js",
-    "static/js/2.d7f2b4dd.chunk.js.map": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js.map",
-    "index.html": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/index.html",
-    "precache-manifest.511f43cf55130559426d4afd08bad63e.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/precache-manifest.511f43cf55130559426d4afd08bad63e.js",
-    "service-worker.js": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/service-worker.js",
-    "static/js/2.d7f2b4dd.chunk.js.LICENSE.txt": "https://github.com/pfftdammitchris/aitmed-react-uidl-underworld/static/js/2.d7f2b4dd.chunk.js.LICENSE.txt"
+    "main.js": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/main.ff8f0839.chunk.js",
+    "main.js.map": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/main.ff8f0839.chunk.js.map",
+    "runtime-main.js": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/runtime-main.a3e3b7b5.js",
+    "runtime-main.js.map": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/runtime-main.a3e3b7b5.js.map",
+    "static/js/2.b94bbf5b.chunk.js": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/2.b94bbf5b.chunk.js",
+    "static/js/2.b94bbf5b.chunk.js.map": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/2.b94bbf5b.chunk.js.map",
+    "index.html": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/index.html",
+    "precache-manifest.17846aacfb08418bdf6b7c282c54e973.js": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/precache-manifest.17846aacfb08418bdf6b7c282c54e973.js",
+    "service-worker.js": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/service-worker.js",
+    "static/js/2.b94bbf5b.chunk.js.LICENSE.txt": "https://pfftdammitchris.github.io/aitmed-react-uidl-underworld/static/js/2.b94bbf5b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.e79baa0c.js",
-    "static/js/2.d7f2b4dd.chunk.js",
-    "static/js/main.6e7492a5.chunk.js"
+    "static/js/runtime-main.a3e3b7b5.js",
+    "static/js/2.b94bbf5b.chunk.js",
+    "static/js/main.ff8f0839.chunk.js"
   ]
 }
