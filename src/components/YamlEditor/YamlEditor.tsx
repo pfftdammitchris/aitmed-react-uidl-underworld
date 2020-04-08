@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField'
 
 const StyledYamlEditorRoot = styled.div`
   textarea {
-    color: #333;
+    color: rgba(0, 0, 0, 0.8);
     font-size: 13px;
   }
   .input {

@@ -17,14 +17,13 @@ export interface SelectProps extends MuiSelectProps {
 const StyledSelect = styled(TextField)`
   option,
   select {
-    color: #333;
+    color: rgba(0, 0, 0, 0.8);
   }
   .input {
-    color: #333;
     box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
   }
   .outline {
-    color: #333;
+    color: rgba(0, 0, 0, 0.8);
     border: 1px #37506c solid;
   }
   .label {
@@ -41,7 +40,7 @@ function Select({
 }: any) {
   return (
     <StyledSelect
-      margin="dense"
+      margin="normal"
       InputProps={{
         ...InputProps,
         classes: {

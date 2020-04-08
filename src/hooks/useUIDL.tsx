@@ -57,7 +57,7 @@ function useUIDL({
     selectDeviceOptions,
   } = useSelectDevice({ initialValue: 'galaxyS5' })
 
-  const { selectedPage, selectPage } = useSelectPage({
+  const { selectedPage, selectPage, selectPageOptions } = useSelectPage({
     name: '1_SignIn',
     pages: state.pages,
     navigate,
@@ -129,6 +129,7 @@ function useUIDL({
     selectDeviceOptions,
     selectPage,
     selectedPage,
+    selectPageOptions,
     yml,
     parsedYml,
     setYml,

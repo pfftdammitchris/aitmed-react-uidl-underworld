@@ -1,60 +1,41 @@
 import React from 'react'
-import styled from 'styled-components'
-import Actions from 'components/common/Actions'
-import Select from 'components/common/Select'
-import { toSelectPageOptions } from 'hooks/useSelectPage'
-import { selectDeviceOptions } from 'hooks/useSelectDevice'
+import Select, { SelectOption } from 'components/common/Select'
 
 export interface ControlsProps {
-  baseUrl?: string
-  viewport?: {
-    width: number
-    height: number
+  device?: {
+    selected?: string
+    select?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
+    selectOptions?: SelectOption[]
   }
-  yml?: string
-  setYml?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
-  selectedDevice?: string
-  selectDevice?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
-  selectPage?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
-  selectedPage?: string
-  page?: any
-  pages?: string[]
+  page?: {
+    select?: (e: React.ChangeEvent<any>) => void | ((e: string) => void)
+    selected?: string
+    selectOptions?: SelectOption[]
+  }
 }
 
-const StyledRoot = styled.div`
-  width: 100%;
-`
-
-function Controls({
-  viewport,
-  yml,
-  setYml,
-  selectedDevice,
-  selectDevice,
-  selectedPage = '',
-  selectPage,
-  page,
-  pages = [],
-}: ControlsProps) {
+function Controls({ device, page }: ControlsProps) {
   return (
-    <StyledRoot>
-      <Actions>
+    <>
+      {device && (
         <Select
           name="device"
           label="Select Device"
-          value={selectedDevice}
-          onChange={selectDevice}
-          options={selectDeviceOptions}
+          value={device.selected}
+          onChange={device.select}
+          options={device.selectOptions}
         />
-      </Actions>
-      <Select
-        name="page"
-        label="Select Page"
-        value={selectedPage}
-        onChange={selectPage}
-        options={toSelectPageOptions(pages)}
-      />
-    </StyledRoot>
+      )}
+      {page && (
+        <Select
+          name="page"
+          label="Select Page"
+          value={page.selected}
+          onChange={page.select}
+          options={page.selectOptions}
+        />
+      )}
+    </>
   )
 }
 

@@ -2,14 +2,14 @@ import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
 import ReactUIDL from '@aitmed/react-uidl'
 import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
 import YamlEditor from 'components/YamlEditor'
 import AutoSave from 'components/AutoSave'
-import Board from 'components/Board'
-import Actions from 'components/common/Actions'
-import Select from 'components/common/Select'
+import Panel from 'components/Panel'
+import YamlEditorToolbar from 'components/YamlEditorToolbar'
 import Button from 'components/uidl/Button'
 import Image from 'components/uidl/Image'
 import Input from 'components/uidl/Input'
@@ -18,9 +18,8 @@ import Div from 'components/uidl/Div'
 import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
 import { devices, DeviceKey } from 'hooks/useSelectDevice'
-import { toSelectPageOptions } from 'hooks/useSelectPage'
-import { log } from './utils/common'
 import Controls from './Controls'
+import { log } from './utils/common'
 
 const baseUrl = 'https://public.aitmed.com/alpha/'
 const uidlEndpoint = `${baseUrl}uidlEndpoint.yml`
@@ -54,6 +53,8 @@ function App({
     selectedDevice,
     selectDeviceOptions,
     selectedPage,
+    selectPage,
+    selectPageOptions,
     initialPageYml,
     yml,
     parsedYml,
@@ -95,15 +96,45 @@ function App({
       direction={selectedDevice === 'iPad' && !isWidescreen ? 'column' : 'row'}
       container
     >
-      <Grid xs={12} sm={6} md={6} lg={4} xl={5} item>
-        <Board
-          component={Grid}
-          label="Component Board"
-          sublabel="Draggable components"
-          height="60%"
+      <Panel
+        label="Functions"
+        sublabel="Detected Functions"
+        xs={12}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={5}
+        item
+      />
+      <Panel
+        label="Assets"
+        sublabel="Detected Assets"
+        xs={12}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={5}
+        item
+      >
+        <Paper
+          style={{
+            padding: 25,
+            minHeight: 100,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          }}
+          elevation={0}
         />
-      </Grid>
-      <Grid
+      </Panel>
+      <Panel label="Component Board" xs={12} sm={6} md={6} lg={4} xl={5} item>
+        <Paper
+          style={{
+            padding: 25,
+            minHeight: 100,
+          }}
+          elevation={0}
+        />
+      </Panel>
+      <Panel
         style={{
           paddingLeft: 12,
           paddingRight: 12,
@@ -116,34 +147,20 @@ function App({
         xl={5}
         item
       >
-        <Actions>
-          <Select
-            name="device"
-            label="Select Device"
-            value={selectedDevice}
-            onChange={selectDevice}
-            options={selectDeviceOptions}
-          />
-        </Actions>
-        <Select
-          name="page"
-          label="Select Page"
-          value={selectedPage}
-          onChange={onSelectPage}
-          options={toSelectPageOptions(pages)}
+        <Controls
+          device={{
+            selected: selectedDevice,
+            select: selectDevice,
+            selectOptions: selectDeviceOptions,
+          }}
+          page={{
+            selected: selectedPage,
+            select: selectPage,
+            selectOptions: selectPageOptions,
+          }}
         />
-        <Board label="Functions" sublabel="Detected Functions" />
-        <Board label="Assets" sublabel="Detected Assets" />
-      </Grid>
-      <Grid
-        style={{ overflow: 'hidden' }}
-        xs={12}
-        sm={12}
-        md={6}
-        lg={4}
-        xl={5}
-        item
-      >
+      </Panel>
+      <Panel xs={12} sm={6} md={6} lg={6} xl={5} item>
         <Typography
           component="div"
           align="center"
@@ -178,8 +195,8 @@ function App({
             viewportHeight={vh}
           />
         </div>
-      </Grid>
-      <Grid
+      </Panel>
+      <Panel
         style={{
           paddingLeft: 12,
           paddingRight: 12,
@@ -191,23 +208,46 @@ function App({
         xl={5}
         item
       >
+        <YamlEditorToolbar />
         <YamlEditor value={yml} onChange={setYml} />
-        <Board
-          label="History"
-          sublabel="(Saves every 15 seconds. Maximum 8 items in stack)"
-        >
-          <AutoSave
-            // @ts-ignore
-            storedKey={parsedYml ? parsedYml.pageName || '' : ''}
-            storedObj={{ data: yml }}
-            render={({ cache, id }) => {
-              console.log('autosave cache: ', cache)
-              console.log('autosave id: ', id)
-              return null
-            }}
-          />
-        </Board>
-      </Grid>
+      </Panel>
+      <Panel
+        style={{
+          paddingLeft: 12,
+          paddingRight: 12,
+        }}
+        xs={12}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={5}
+        item
+      />
+      <Panel
+        label="History"
+        sublabel="(Saves every 15 seconds. Maximum 8 items in stack)"
+        style={{
+          paddingLeft: 12,
+          paddingRight: 12,
+        }}
+        xs={12}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={5}
+        item
+      >
+        <AutoSave
+          // @ts-ignore
+          storedKey={parsedYml ? parsedYml.pageName || '' : ''}
+          storedObj={{ data: yml }}
+          render={({ cache, id }) => {
+            console.log('autosave cache: ', cache)
+            console.log('autosave id: ', id)
+            return null
+          }}
+        />
+      </Panel>
     </Grid>
   )
 }
