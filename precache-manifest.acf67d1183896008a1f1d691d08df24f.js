@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c5f172f2dc996b9a23ba2165e41e88dc",
+    "revision": "f74a6aa9ca8986d53a82f64024675a32",
     "url": "/aitmed-react-uidl-underworld/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/aitmed-react-uidl-underworld/static/js/2.9b7a4cb2.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6e211bf3fc6b4d972d15",
-    "url": "/aitmed-react-uidl-underworld/static/js/main.d540b6f3.chunk.js"
+    "revision": "e467d1ff631137decc7f",
+    "url": "/aitmed-react-uidl-underworld/static/js/main.3d711b2d.chunk.js"
   },
   {
     "revision": "add234f4bf76671d0395",
