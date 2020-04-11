@@ -1,8 +1,11 @@
 import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
+import yaml from 'yaml'
 import styled from 'styled-components'
 import ReactUIDL from '@aitmed/react-uidl'
 import Grid from '@material-ui/core/Grid'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
@@ -10,6 +13,9 @@ import YamlEditor from 'components/YamlEditor'
 import AutoSave from 'components/AutoSave'
 import Panel from 'components/Panel'
 import YamlEditorToolbar from 'components/YamlEditorToolbar'
+import ComponentBoard, {
+  ComponentBoardProvider,
+} from 'components/ComponentBoard'
 import Button from 'components/uidl/Button'
 import Image from 'components/uidl/Image'
 import Input from 'components/uidl/Input'
@@ -17,6 +23,7 @@ import Label from 'components/uidl/Label'
 import Div from 'components/uidl/Div'
 import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
+import useEditorMode from 'hooks/useEditorMode'
 import Controls from 'components/Controls'
 import { devices, DeviceKey } from 'hooks/useSelectDevice'
 import Documentation from 'components/Documentation'
@@ -42,6 +49,14 @@ const StyledDocumentation = styled.div`
   box-sizing: border-box;
 `
 
+const StyledTab = styled(Tab)`
+  text-transform: none;
+  margin-right: 8px;
+  :focus {
+    opacity: 1;
+  }
+`
+
 function App({
   history,
   location,
@@ -51,6 +66,7 @@ function App({
   const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
   const theme = useTheme()
   const isWidescreen = useMediaQuery(theme.breakpoints.only('xl'))
+  const { editorMode, onEditorModeChange } = useEditorMode()
   const {
     config,
     baseCss,
@@ -62,7 +78,6 @@ function App({
     selectPage,
     selectPageOptions,
     yml,
-    parsedYml,
     setYml,
   } = useUIDL({
     baseUrl,
@@ -78,12 +93,12 @@ function App({
     setVh(device.sizes.height)
   }, [selectedDevice])
 
-  if (config && baseCss && basePage && parsedYml) {
+  if (config && baseCss && basePage) {
     if (process.env.NODE_ENV !== 'production') {
       log({ msg: 'config', color: 'olive', data: config })
       log({ msg: 'baseCss', color: 'olive', data: baseCss })
       log({ msg: 'basePage', color: 'olive', data: basePage })
-      log({ msg: 'page', color: 'olive', data: parsedYml })
+      // log({ msg: 'page', color: 'olive', data: parsedYml })
     }
   }
 
@@ -125,6 +140,9 @@ function App({
         }
         container
       >
+        {/* <Panel xs={12} sm={6} md={5} lg={5} xl={5} item>
+          <ComponentBoard yml={yml} setYml={setYml} />
+        </Panel> */}
         <Panel xs={12} sm={6} md={5} lg={5} xl={5} item>
           <Typography
             component="div"
@@ -146,7 +164,7 @@ function App({
             <ReactUIDL
               baseCss={baseCss}
               basePage={basePage}
-              page={parsedYml}
+              page={yaml.parse(yml)}
               config={config}
               components={{
                 Button,
@@ -175,7 +193,22 @@ function App({
             }}
           />
           {/* <YamlEditorToolbar /> */}
-          <YamlEditor value={yml} onChange={setYml} />
+
+          <Tabs value={editorMode} onChange={onEditorModeChange}>
+            <StyledTab label="YAML" value="yaml" wrapped>
+              <YamlEditor value={yml} onChange={setYml} />
+            </StyledTab>
+            <StyledTab
+              label="Component board"
+              value="component-board"
+              onChange={onEditorModeChange}
+              wrapped
+            >
+              <ComponentBoardProvider yml={yml} setYml={setYml}>
+                <ComponentBoard />
+              </ComponentBoardProvider>
+            </StyledTab>
+          </Tabs>
         </Panel>
       </Grid>
     </>

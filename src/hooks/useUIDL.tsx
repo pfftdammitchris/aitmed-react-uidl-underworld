@@ -5,7 +5,7 @@ import { prynote } from 'app/client'
 import useYamlEditor from 'hooks/useYamlEditor'
 import useSelectPage from 'hooks/useSelectPage'
 import useSelectDevice from 'hooks/useSelectDevice'
-import { log } from '../utils/common'
+import { log } from 'utils'
 
 const storedConfigKey = 'uidl-uw'
 
@@ -63,7 +63,7 @@ function useUIDL({
     navigate,
   })
 
-  const { yml, parsedYml, setYml } = useYamlEditor({
+  const { yml, parsedYml, setYml, setYmlByParsed } = useYamlEditor({
     initialValue: '',
     pageName: selectedPage,
   })
@@ -133,6 +133,7 @@ function useUIDL({
     yml,
     parsedYml,
     setYml,
+    setYmlByParsed,
     onSelectDevice,
     onSelectPage,
   }

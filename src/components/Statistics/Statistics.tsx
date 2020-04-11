@@ -31,32 +31,32 @@ const initialStats = {
 function Statistics({ page }: StatisticsProps) {
   const [stats, setStats] = useImmer(initialStats)
 
-  function extract(components) {
-    if (Array.isArray(components)) {
-      setStats((draft) => {
-        components.forEach((component) => {
-          const { componentId, resource, path, onClick, onHover, type } = component
-          draft.components[componentId] = component
-          if (!draft['componentIds'].includes(componentId)) {
-            draft.componentIds.push(componentId)
-          }
+  // function extract(components) {
+  //   if (Array.isArray(components)) {
+  //     setStats((draft) => {
+  //       components.forEach((component) => {
+  //         const { componentId, resource, path, onClick, onHover, type } = component
+  //         draft.components[componentId] = component
+  //         if (!draft['componentIds'].includes(componentId)) {
+  //           draft.componentIds.push(componentId)
+  //         }
 
-          if (resource || path) {
-            if (!(draft.assets[componentId])) {
-              draft.assets[componentId] = {}
-              if (resource) draft.assets[]
-            } else {
-              if (resource) 
-            }
-          }
+  //         if (resource || path) {
+  //           if (!(draft.assets[componentId])) {
+  //             draft.assets[componentId] = {}
+  //             if (resource) draft.assets[]
+  //           } else {
+  //             if (resource)
+  //           }
+  //         }
 
-          if (!(draft.assets[componentId])) {
-            
-          }
-        })
-      })
-    }
-  }
+  //         if (!(draft.assets[componentId])) {
+
+  //         }
+  //       })
+  //     })
+  //   }
+  // }
 
   React.useEffect(() => {
     function getComponentStats(
