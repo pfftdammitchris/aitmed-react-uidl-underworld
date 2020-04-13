@@ -12,7 +12,31 @@ import ComponentBoardContext from './ComponentBoardContext'
 import useComponentBoard from 'hooks/useComponentBoard'
 import YamlSeq from './YamlSeq'
 
-function ComponentBoard() {
+export interface ComponentBoardProps {
+  yml: string
+  setYml: (yml: string) => any
+}
+
+const StyledPair = styled(Grid)`
+  border: 1px solid teal;
+  .label {
+    margin-bottom: 10px;
+  }
+`
+
+const StyledRootBody = styled.div``
+
+function TextInput({ node, setYml, ymlDoc, ...props }) {
+  const [value, setValue] = React.useState(node.value.value || '')
+  const onChange = (e) => {
+    node.value.value = e.target.value
+    setValue(e.target.value)
+    setYml(ymlDoc.current.toString())
+  }
+  return <TextField value={value} onChange={onChange} fullWidth {...props} />
+}
+
+function ComponentBoard({ yml, setYml }: ComponentBoardProps) {
   const { renderComponent } = React.useContext(ComponentBoardContext)
   const { paths, ids = [], ymlDoc } = useComponentBoard({
     yml,
@@ -30,24 +54,24 @@ function ComponentBoard() {
         label = node.key.value
       }
 
-      if (node.value?.type === 'PLAIN') {
-        body = (
-          <>
-            <div style={{ width: 12 }} />
-            <TextField
-              name={label as string}
-              value={node.value.value}
-              fullWidth
-            />
-          </>
-        )
-      }
+      body = (
+        <TextInput
+          node={node}
+          name={label as string}
+          setYml={setYml}
+          ymlDoc={ymlDoc}
+        />
+      )
 
       children = (
-        <Grid style={{ display: 'flex', alignItems: 'center' }} xs={12} item>
-          <InputLabel>{label}</InputLabel>
-          <div>{body}</div>
-        </Grid>
+        <StyledPair
+          // style={{ display: 'flex', alignItems: 'center' }}
+          xs={12}
+          item
+        >
+          <InputLabel className="label">{label}</InputLabel>
+          <StyledRootBody>{body}</StyledRootBody>
+        </StyledPair>
       )
     }
 
@@ -91,7 +115,7 @@ function ComponentBoard() {
     //     )
     //   }
 
-    //   return children || null
+    return children || null
   }
 
   let children
@@ -99,6 +123,8 @@ function ComponentBoard() {
   if (typeof ymlDoc.current !== 'string') {
     if (ymlDoc.current.contents?.type === 'MAP') {
       children = ymlDoc.current.contents.items.map((node, index: number) => {
+        console.log(node)
+
         return (
           <React.Fragment key={`rootNode${index}`}>
             {node.type === 'PAIR' ? renderRootPair(node, index) : null}
@@ -109,11 +135,7 @@ function ComponentBoard() {
   }
 
   return (
-    <Grid
-      style={{ padding: 12, boxSizing: 'border-box', width: '100%' }}
-      spacing={8}
-      container
-    >
+    <Grid style={{ margin: '12px 0' }} container>
       {children}
     </Grid>
   )

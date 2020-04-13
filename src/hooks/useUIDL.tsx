@@ -63,9 +63,8 @@ function useUIDL({
     navigate,
   })
 
-  const { yml, parsedYml, setYml, setYmlByParsed } = useYamlEditor({
+  const { yml, setYml, editorState, onEditorStateChange } = useYamlEditor({
     initialValue: '',
-    pageName: selectedPage,
   })
 
   function onSelectDevice(e: any) {
@@ -131,9 +130,9 @@ function useUIDL({
     selectedPage,
     selectPageOptions,
     yml,
-    parsedYml,
     setYml,
-    setYmlByParsed,
+    ymlEditorState: editorState,
+    onYmlEditorStateChange: onEditorStateChange,
     onSelectDevice,
     onSelectPage,
   }

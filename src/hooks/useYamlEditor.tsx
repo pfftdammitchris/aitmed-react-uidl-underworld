@@ -1,6 +1,7 @@
 // Utility react hook for debugging UIDL - Provides controls for working
 //    with text fields. Ex: WYSIWYG UIDL editor
 import React from 'react'
+import { Editor, EditorState, getDefaultKeyBinding, RichUtils } from 'draft-js'
 import { useImmer } from 'use-immer'
 
 export interface UseYamlEditorOptions {

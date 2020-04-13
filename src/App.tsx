@@ -4,18 +4,11 @@ import yaml from 'yaml'
 import styled from 'styled-components'
 import ReactUIDL from '@aitmed/react-uidl'
 import Grid from '@material-ui/core/Grid'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
 import YamlEditor from 'components/YamlEditor'
-import AutoSave from 'components/AutoSave'
 import Panel from 'components/Panel'
-import YamlEditorToolbar from 'components/YamlEditorToolbar'
-import ComponentBoard, {
-  ComponentBoardProvider,
-} from 'components/ComponentBoard'
 import Button from 'components/uidl/Button'
 import Image from 'components/uidl/Image'
 import Input from 'components/uidl/Input'
@@ -23,7 +16,6 @@ import Label from 'components/uidl/Label'
 import Div from 'components/uidl/Div'
 import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
-import useEditorMode from 'hooks/useEditorMode'
 import Controls from 'components/Controls'
 import { devices, DeviceKey } from 'hooks/useSelectDevice'
 import Documentation from 'components/Documentation'
@@ -49,14 +41,6 @@ const StyledDocumentation = styled.div`
   box-sizing: border-box;
 `
 
-const StyledTab = styled(Tab)`
-  text-transform: none;
-  margin-right: 8px;
-  :focus {
-    opacity: 1;
-  }
-`
-
 function App({
   history,
   location,
@@ -66,7 +50,6 @@ function App({
   const [vh, setVh] = React.useState(devices['galaxyS5'].sizes.height)
   const theme = useTheme()
   const isWidescreen = useMediaQuery(theme.breakpoints.only('xl'))
-  const { editorMode, onEditorModeChange } = useEditorMode()
   const {
     config,
     baseCss,
@@ -193,22 +176,7 @@ function App({
             }}
           />
           {/* <YamlEditorToolbar /> */}
-
-          <Tabs value={editorMode} onChange={onEditorModeChange}>
-            <StyledTab label="YAML" value="yaml" wrapped>
-              <YamlEditor value={yml} onChange={setYml} />
-            </StyledTab>
-            <StyledTab
-              label="Component board"
-              value="component-board"
-              onChange={onEditorModeChange}
-              wrapped
-            >
-              <ComponentBoardProvider yml={yml} setYml={setYml}>
-                <ComponentBoard />
-              </ComponentBoardProvider>
-            </StyledTab>
-          </Tabs>
+          <YamlEditor yml={yml} setYml={setYml} />
         </Panel>
       </Grid>
     </>
