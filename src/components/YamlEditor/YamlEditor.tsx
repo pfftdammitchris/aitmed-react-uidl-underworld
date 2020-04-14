@@ -30,7 +30,6 @@ function YamlEditor(props: {
         name="page"
         rows={15}
         rowsMax={30}
-        label="Editor"
         InputLabelProps={{
           classes: {
             root: 'label',

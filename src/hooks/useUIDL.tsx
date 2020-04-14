@@ -63,9 +63,8 @@ function useUIDL({
     navigate,
   })
 
-  const { yml, parsedYml, setYml, setYmlByParsed } = useYamlEditor({
+  const { yml, parsedYml, onYmlChange } = useYamlEditor({
     initialValue: '',
-    pageName: selectedPage,
   })
 
   function onSelectDevice(e: any) {
@@ -111,7 +110,7 @@ function useUIDL({
       try {
         const url = `${state.config?.baseUrl || baseUrl}${selectedPage}_en.yml`
         const { data: pageYml } = await axios.get(url)
-        setYml(pageYml)
+        onYmlChange(pageYml)
       } catch (error) {
         console.error(error)
         window.alert(error.message)
@@ -132,8 +131,7 @@ function useUIDL({
     selectPageOptions,
     yml,
     parsedYml,
-    setYml,
-    setYmlByParsed,
+    onYmlChange,
     onSelectDevice,
     onSelectPage,
   }

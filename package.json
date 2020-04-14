@@ -6,7 +6,7 @@
   "dependencies": {
     "@aitmed/ecos-lvl2-sdk": "^1.4.67",
     "@aitmed/prynote-sdk": "^1.0.105",
-    "@aitmed/react-uidl": "^2.4.1",
+    "@aitmed/react-uidl": "^2.5.0",
     "@aitmed/uidl-parser": "^1.0.17",
     "@material-ui/core": "^4.9.9",
     "@material-ui/icons": "^4.9.1",

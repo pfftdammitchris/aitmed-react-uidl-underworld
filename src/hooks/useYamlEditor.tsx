@@ -2,30 +2,37 @@
 //    with text fields. Ex: WYSIWYG UIDL editor
 import React from 'react'
 import { useImmer } from 'use-immer'
+import yaml from 'yaml'
 
 export interface UseYamlEditorOptions {
   initialValue?: string
-  delay?: number
 }
 
 const initialState = {
   yml: '',
-  cache: {},
+  parsedYml: null,
 }
 
-function useYamlEditor({
-  initialValue = '',
-  delay: delayProp = 50,
-}: UseYamlEditorOptions) {
+function useYamlEditor({ initialValue = '' }: UseYamlEditorOptions) {
   const [state, setState] = useImmer(initialState)
-  const [delay, setDelay] = React.useState(delayProp)
 
-  function setYml(e: React.ChangeEvent<HTMLInputElement> | string) {
+  function parse(yml: string) {
+    try {
+      return yaml.parse(yml)
+    } catch (error) {
+      console.error(error)
+      return yml
+    }
+  }
+
+  function onYmlChange(e: React.ChangeEvent<HTMLInputElement> | string) {
     // Caller is directly using a YAML string
     if (typeof e === 'string') {
       if (e !== state.yml) {
         setState((draft) => {
           draft.yml = e
+          const parsedYml = parse(e)
+          if (parsedYml) draft.parsedYml = parsedYml
         })
       }
     } else {
@@ -33,6 +40,8 @@ function useYamlEditor({
       if (e.target.value !== state.yml) {
         setState((draft) => {
           draft.yml = e.target.value
+          const parsedYml = parse(e.target.value)
+          if (parsedYml) draft.parsedYml = parsedYml
         })
       }
     }
@@ -43,6 +52,8 @@ function useYamlEditor({
     if (initialValue) {
       setState((draft) => {
         draft.yml = initialValue
+        const parsedYml = parse(initialValue)
+        if (parsedYml) draft.parsedYml = parsedYml
       })
     }
     // eslint-disable-next-line
@@ -50,9 +61,7 @@ function useYamlEditor({
 
   return {
     ...state,
-    delay,
-    setDelay,
-    setYml,
+    onYmlChange,
   }
 }
 
