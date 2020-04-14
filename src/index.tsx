@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import GlobalStyle from './app/GlobalStyle'
 import App from './App'
-import Test from './Test'
 import AppProvider from './AppProvider'
 import AuthProvider from './AuthProvider'
 import * as serviceWorker from 'serviceWorker'
@@ -16,7 +15,6 @@ ReactDOM.render(
         <Router>
           <Switch>
             <Route path="/" component={App} exact />
-            <Route path="/test" component={Test} />
             <Route path="/:page" component={App} />
           </Switch>
         </Router>
