@@ -73,6 +73,7 @@ function useYamlEditor({
   }
 
   function onPastedText(text: string): DraftHandleValue {
+    if (exampleInitialized) return 'not-handled'
     const contentState = ContentState.createFromText(text)
     const nextEditorState = EditorState.createWithContent(contentState)
     onChange(nextEditorState)
