@@ -1,33 +1,60 @@
 import React from 'react'
 import styled from 'styled-components'
-import TextField from '@material-ui/core/TextField'
+import { Editor, EditorState, getDefaultKeyBinding, RichUtils } from 'draft-js'
+import CodeUtils from 'draft-js-code'
+import useYamlEditor from 'hooks/useYamlEditor'
 
-const StyledYamlEditorRoot = styled.div`
-  textarea {
-    color: rgba(0, 0, 0, 0.8);
-    font-size: 13px;
-  }
-  .input {
-    box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
-    padding-top: 16px;
-  }
-  .label {
-    color: rgba(0, 0, 0, 0.7);
-  }
-  .notchedOutline {
-    /* border-color: #37506c; */
-    border: 1px #37506c solid;
-  }
+export interface YamlEditorProps {
+  yml: string
+  setYml: (yml: string) => void
+}
+
+const StyledRoot = styled.div`
+  margin: 12px 0;
 `
 
-function YamlEditor(props: {
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => any
-}) {
+const StyledEditor = styled.div`
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
+  padding: 12px;
+`
+
+function YamlEditor({ yml, setYml }: YamlEditorProps) {
+  const {
+    editorState,
+    onChange,
+    keyBindingFn,
+    handleKeyCommand,
+    handleReturn,
+    onTab,
+  } = useYamlEditor({ yml, setYml })
+
   return (
-    <StyledYamlEditorRoot>
+    <StyledRoot>
+      <StyledEditor>
+        <Editor
+          editorState={editorState}
+          onChange={onChange}
+          placeholder="Enter YAML"
+          keyBindingFn={keyBindingFn}
+          handleKeyCommand={handleKeyCommand}
+          handleReturn={handleReturn}
+          onTab={onTab}
+        />
+      </StyledEditor>
+    </StyledRoot>
+  )
+}
+
+export default YamlEditor
+
+/*
+<StyledRoot>
       <TextField
         name="page"
+        value={yml}
+        onChange={setYml}
         rows={15}
         rowsMax={30}
         label="Editor"
@@ -48,10 +75,7 @@ function YamlEditor(props: {
         margin="normal"
         multiline
         fullWidth
-        {...props}
+        {...rest}
       />
-    </StyledYamlEditorRoot>
-  )
-}
-
-export default YamlEditor
+    </StyledRoot>
+*/

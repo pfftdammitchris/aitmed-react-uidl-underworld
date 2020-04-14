@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import { useImmer } from 'use-immer'
 import { prynote } from 'app/client'
-import useYamlEditor from 'hooks/useYamlEditor'
 import useSelectPage from 'hooks/useSelectPage'
 import useSelectDevice from 'hooks/useSelectDevice'
 import { log } from 'utils'
@@ -50,6 +49,7 @@ function useUIDL({
   uidlEndpoint: string
 }) {
   const [state, setState] = useImmer(initialState)
+  const [yml, setYml] = React.useState('')
 
   const {
     selectedDevice,
@@ -63,17 +63,24 @@ function useUIDL({
     navigate,
   })
 
-  const { yml, parsedYml, setYml, setYmlByParsed } = useYamlEditor({
-    initialValue: '',
-    pageName: selectedPage,
-  })
-
   function onSelectDevice(e: any) {
     selectDevice(e)
   }
 
   function onSelectPage(e: any) {
     selectPage(e)
+  }
+
+  function onYmlChange(e: React.ChangeEvent<HTMLInputElement> | string) {
+    // Caller is directly using a YAML string
+    if (typeof e === 'string') {
+      setYml(e)
+    } else {
+      e.persist()
+      if (e.target.value !== yml) {
+        setYml(e.target.value)
+      }
+    }
   }
 
   React.useEffect(() => {
@@ -131,9 +138,7 @@ function useUIDL({
     selectedPage,
     selectPageOptions,
     yml,
-    parsedYml,
-    setYml,
-    setYmlByParsed,
+    setYml: onYmlChange,
     onSelectDevice,
     onSelectPage,
   }
