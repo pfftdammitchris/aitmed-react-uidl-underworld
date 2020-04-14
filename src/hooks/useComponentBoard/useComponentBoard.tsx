@@ -12,9 +12,9 @@ const initialState: UseComponentBoardState = {
   ids: [],
 }
 
-function useComponentBoard({ yml = '' }: { yml: string }) {
+function useComponentBoard({ yml = '' }: any = {}) {
   const [state, setState] = useImmer(initialState)
-  const ymlDoc = React.useRef(yml ? yaml.parseDocument(yml) : '')
+  const ymlDoc = React.useRef<any>(yml ? yaml.parseDocument(yml) : '')
 
   React.useEffect(() => {
     ymlDoc.current = yaml.parseDocument(yml)

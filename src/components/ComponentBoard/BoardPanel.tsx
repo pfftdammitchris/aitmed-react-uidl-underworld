@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import InputLabel from '@material-ui/core/InputLabel'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
@@ -9,8 +8,6 @@ export interface ComponentBoardPanelProps {
   children?: React.ReactNode
   inline?: boolean
 }
-
-const StyledBoardLabel = styled(InputLabel)``
 
 const StyledBoardBody = styled.div``
 
@@ -24,9 +21,9 @@ function ComponentBoardPanel({
       <CardContent
         style={{ display: inline ? 'flex' : 'block', alignItems: 'center' }}
       >
-        <StyledBoardLabel component="pre">
+        <pre>
           <code>{label}</code>
-        </StyledBoardLabel>
+        </pre>
         {inline && <div style={{ width: 12 }} />}
         <StyledBoardBody>{children}</StyledBoardBody>
       </CardContent>

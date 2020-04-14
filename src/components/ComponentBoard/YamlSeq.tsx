@@ -12,7 +12,7 @@ function YamlSeq({ node }: YamlSeqProps) {
   const keyNode = node.key
   const valueNode = node.value
 
-  const children = valueNode?.items?.map((nodeChild) =>
+  const children = valueNode?.items?.map((nodeChild: any) =>
     renderComponent(nodeChild),
   )
   console.log(node)

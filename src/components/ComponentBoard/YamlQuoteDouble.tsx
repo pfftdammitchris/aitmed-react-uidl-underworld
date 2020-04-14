@@ -8,7 +8,7 @@ export interface YamlQuoteDoubleProps {
   node?: any
 }
 
-function YamlQuoteDouble({ keyNode, valueNode }) {
+function YamlQuoteDouble({ keyNode, valueNode }: any) {
   const [value, setValue] = React.useState(keyNode.value)
 
   return (

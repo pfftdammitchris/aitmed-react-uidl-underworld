@@ -27,7 +27,7 @@ function ToolbarButton({ children, ...props }: any) {
   )
 }
 
-function YamlEditorToolbar(props) {
+function YamlEditorToolbar(props: any) {
   return (
     <AppBar position="sticky" color="transparent" elevation={0}>
       <StyledToolbar>

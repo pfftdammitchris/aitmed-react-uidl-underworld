@@ -9,7 +9,9 @@ export interface YamlMapProps {
 function YamlMap({ node }: YamlMapProps) {
   const { renderComponent } = React.useContext(ComponentBoardContext)
 
-  const children = node.items.map((nodeChild) => renderComponent(nodeChild))
+  const children = node.items.map((nodeChild: any) =>
+    renderComponent(nodeChild),
+  )
   if (node) {
     return (
       <BoardPanel label={node.value}>

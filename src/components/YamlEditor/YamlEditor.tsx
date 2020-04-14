@@ -21,6 +21,8 @@ const StyledEditor = styled.pre`
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
   padding: 12px;
+  overflow-y: auto;
+  max-height: 550px;
 `
 
 function YamlEditor({ onYmlChange }: YamlEditorProps) {

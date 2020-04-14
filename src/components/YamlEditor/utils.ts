@@ -191,6 +191,7 @@ export function removeIndent(
 
   const newContentState = Modifier.removeRange(
     contentState,
+    // @ts-ignore
     rangeToRemove,
     'backward',
   )

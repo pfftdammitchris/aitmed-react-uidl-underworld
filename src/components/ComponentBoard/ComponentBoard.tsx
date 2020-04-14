@@ -1,13 +1,8 @@
 import React from 'react'
-import get from 'lodash.get'
 import yaml from 'yaml'
-import styled from 'styled-components'
 import InputLabel from '@material-ui/core/InputLabel'
-import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
 import ComponentBoardContext from './ComponentBoardContext'
 import useComponentBoard from 'hooks/useComponentBoard'
 import YamlSeq from './YamlSeq'
@@ -15,11 +10,10 @@ import YamlSeq from './YamlSeq'
 function ComponentBoard() {
   const { renderComponent } = React.useContext(ComponentBoardContext)
   const { paths, ids = [], ymlDoc } = useComponentBoard({
-    yml,
-    setYml,
+    yml: '',
   })
 
-  function renderRootPair(node: yaml.ast.Pair, index: number) {
+  function renderRootPair(node: any, index: number): any {
     let children
 
     // Key/Value
@@ -98,13 +92,15 @@ function ComponentBoard() {
 
   if (typeof ymlDoc.current !== 'string') {
     if (ymlDoc.current.contents?.type === 'MAP') {
-      children = ymlDoc.current.contents.items.map((node, index: number) => {
-        return (
-          <React.Fragment key={`rootNode${index}`}>
-            {node.type === 'PAIR' ? renderRootPair(node, index) : null}
-          </React.Fragment>
-        )
-      })
+      children = ymlDoc.current.contents.items.map(
+        (node: any, index: number) => {
+          return (
+            <React.Fragment key={`rootNode${index}`}>
+              {node.type === 'PAIR' ? renderRootPair(node, index) : null}
+            </React.Fragment>
+          )
+        },
+      )
     }
   }
 

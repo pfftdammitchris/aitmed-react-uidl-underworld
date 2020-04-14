@@ -16,6 +16,7 @@ const ComponentBoardContext = React.createContext(context)
 
 function renderComponent(node: yaml.ast.AstNode) {
   let Component: React.ElementType<any>
+  // @ts-ignore
   if (node.type === 'PAIR') Component = YamlPair
   else if (node.type === 'BLOCK_FOLDED') Component = YamlBlockFolded
   else if (node.type === 'BLOCK_LITERAL') Component = YamlBlockLiteral
@@ -24,6 +25,7 @@ function renderComponent(node: yaml.ast.AstNode) {
   else if (node.type === 'MAP') Component = YamlMap
   else if (node.type === 'SEQ') Component = YamlSeq
   else console.log('no node types matched')
+  // @ts-ignore
   return <Component node={node} />
 }
 

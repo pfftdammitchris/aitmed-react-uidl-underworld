@@ -13,7 +13,9 @@ function YamlFlowMap({ node }: YamlFlowMapProps) {
   return (
     <div>
       <Typography>FLOW MAP</Typography>
-      <div>{node.items.map((nodeChild) => renderComponent(nodeChild))}</div>
+      <div>
+        {node.items.map((nodeChild: any) => renderComponent(nodeChild))}
+      </div>
     </div>
   )
 }
