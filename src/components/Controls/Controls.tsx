@@ -42,4 +42,11 @@ function Controls({ device, page }: ControlsProps) {
   )
 }
 
-export default Controls
+export default React.memo(Controls, (props, nextProps) => {
+  if (props.device) {
+    if (props.device.selected !== nextProps.device?.selected) {
+      return false
+    }
+  }
+  return true
+})

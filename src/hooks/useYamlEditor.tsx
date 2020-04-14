@@ -3,32 +3,46 @@
 import React from 'react'
 import {
   EditorState,
-  convertToRaw,
-  getDefaultKeyBinding,
+  ContentState,
+  DraftHandleValue,
+  Modifier,
   RichUtils,
+  getDefaultKeyBinding,
 } from 'draft-js'
-import CodeUtils from 'draft-js-code'
+import exampleYml from 'data/1_SignIn'
+import { log } from 'utils'
 
 export interface UseYamlEditorOptions {
-  yml: string
-  setYml: (yml: string) => any
+  onYmlChange: (yml: React.ChangeEvent<any> | string) => any
+  getIndentation?: (text: string) => string
+  insertNewLine?: (editorState: EditorState) => EditorState
+  removeIndent?: (editorState: EditorState) => EditorState | undefined
   delay?: number
 }
 
 function useYamlEditor({
-  yml,
-  setYml,
+  onYmlChange,
   delay: delayProp = 50,
+  getIndentation,
+  insertNewLine,
+  removeIndent,
 }: UseYamlEditorOptions) {
   const [delay, setDelay] = React.useState(delayProp)
-
+  const [exampleInitialized, setExampledInitialized] = React.useState(false)
   const [editorState, setEditorState] = React.useState(
     EditorState.createEmpty(),
   )
 
+  function initializeExample() {
+    const contentState = ContentState.createFromText(exampleYml)
+    const newEditorState = EditorState.createWithContent(contentState)
+    onChange(newEditorState)
+    if (!exampleInitialized) setExampledInitialized(true)
+  }
+
   function onChange(nextEditorState: EditorState) {
     const contentState = nextEditorState.getCurrentContent()
-    console.log(contentState)
+    onYmlChange(contentState.getPlainText())
     setEditorState(nextEditorState)
   }
 
@@ -38,8 +52,12 @@ function useYamlEditor({
   function handleKeyCommand(command: string) {
     let newState
 
-    if (CodeUtils.hasSelectionInBlock(editorState)) {
-      newState = CodeUtils.handleKeyCommand(editorState, command)
+    if (removeIndent) {
+      if (command === 'backspace') {
+        newState = removeIndent(editorState)
+      }
+    } else {
+      log({ msg: 'Please provide a removeIndent function', color: 'red' })
     }
 
     if (!newState) {
@@ -54,108 +72,91 @@ function useYamlEditor({
     return 'not-handled'
   }
 
+  function onPastedText(text: string): DraftHandleValue {
+    const contentState = ContentState.createFromText(text)
+    const nextEditorState = EditorState.createWithContent(contentState)
+    onChange(nextEditorState)
+    return 'handled'
+  }
+
   function keyBindingFn(e: React.KeyboardEvent<any>) {
-    if (!CodeUtils.hasSelectionInBlock(editorState)) {
-      return getDefaultKeyBinding(e)
-    }
-
-    const command = CodeUtils.getKeyBinding(e)
-
+    const command = undefined
+    // const command = getKeyBinding(e)
     return command || getDefaultKeyBinding(e)
   }
 
   /** Detects and persists indentation when enter is pressed
    * @param { object } e - Event object
    */
-  function handleReturn(e: React.KeyboardEvent<any>) {
-    if (!CodeUtils.hasSelectionInBlock(editorState)) {
+  function onReturn(e: React.KeyboardEvent<any>): DraftHandleValue {
+    if (!insertNewLine) {
+      log({ msg: 'Please provide an insertNewLine function', color: 'red' })
       return 'not-handled'
     }
-
-    onChange(CodeUtils.handleReturn(e, editorState))
-
+    onChange(insertNewLine(editorState))
     return 'handled'
   }
 
-  /** If the selection is inside a code block, it adds two spaces
+  /** Adds two spaces
    * @param { object } e - Event object
    */
-  function onTab(e: React.KeyboardEvent<any>) {
-    if (!CodeUtils.hasSelectionInBlock(editorState)) {
+  function onTab(e: React.KeyboardEvent<any>): DraftHandleValue {
+    e.preventDefault()
+
+    if (!getIndentation) {
+      log({
+        msg: 'Please pass in a getIndentation function for tabs to be handled',
+        color: 'red',
+      })
       return 'not-handled'
     }
 
-    onChange(CodeUtils.onTab(e, editorState))
+    const contentState = editorState.getCurrentContent()
+    const selectionState = editorState.getSelection()
+    const startKey = selectionState.getStartKey()
+    const currentBlock = contentState.getBlockForKey(startKey)
 
+    const indentation = getIndentation(currentBlock.getText())
+
+    let newContentState
+
+    if (selectionState.isCollapsed()) {
+      newContentState = Modifier.insertText(
+        contentState,
+        selectionState,
+        indentation,
+      )
+    } else {
+      newContentState = Modifier.replaceText(
+        contentState,
+        selectionState,
+        indentation,
+      )
+    }
+
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      'insert-characters',
+    )
+
+    onChange(newEditorState)
     return 'handled'
   }
-
-  // // When yml is being updated, this keeps editorState consistently updated
-  // //   to synchronize with the changes
-  // React.useEffect(() => {
-  //   console.log('useEffect yml syncronization')
-  //   const contentState = editorState.getCurrentContent()
-  //   // eslint-disable-next-line
-  // }, [])
 
   return {
     editorState,
     onChange,
     keyBindingFn,
     handleKeyCommand,
-    handleReturn,
+    onReturn,
+    onPastedText,
     onTab,
     delay,
     setDelay,
+    exampleInitialized,
+    initializeExample,
   }
 }
 
 export default useYamlEditor
-
-/*
-// Utility react hook for debugging UIDL - Provides controls for working
-//    with text fields. Ex: WYSIWYG UIDL editor
-import React from 'react'
-
-export interface UseYamlEditorOptions {
-  yml: string
-  setYml: (yml: any) => any
-  delay?: number
-}
-
-function useYamlEditor({
-  yml,
-  setYml,
-  delay: delayProp = 50,
-}: UseYamlEditorOptions) {
-  const [delay, setDelay] = React.useState(delayProp)
-
-  const onChange = React.useCallback(
-    function onChange(e: React.ChangeEvent<any>) {
-      console.log(window.getSelection())
-      setYml(e)
-    },
-    [setYml],
-  )
-
-  // When yml is being updated, this keeps editorState consistently updated
-  //   to synchronize with the changes
-  React.useEffect(() => {
-    // eslint-disable-next-line
-  }, [yml])
-
-  return {
-<<<<<<< HEAD
-    delay,
-    setDelay,
-    onChange,
-=======
-    ...state,
-    onYmlChange,
->>>>>>> master
-  }
-}
-
-export default useYamlEditor
-
-*/

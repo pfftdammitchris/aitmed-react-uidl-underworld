@@ -1,6 +1,5 @@
 import React from 'react'
 import { RouteChildrenProps } from 'react-router-dom'
-import yaml from 'yaml'
 import styled from 'styled-components'
 import ReactUIDL from '@aitmed/react-uidl'
 import Grid from '@material-ui/core/Grid'
@@ -63,6 +62,7 @@ function App({
     yml,
     parsedYml,
     setYml,
+    onYmlChange,
   } = useUIDL({
     baseUrl,
     uidlEndpoint,
@@ -85,6 +85,8 @@ function App({
       // log({ msg: 'page', color: 'olive', data: parsedYml })
     }
   }
+
+  const memoizedParsedYml = React.useMemo(() => parsedYml, [parsedYml])
 
   return (
     <>
@@ -145,7 +147,7 @@ function App({
             <ReactUIDL
               baseCss={baseCss}
               basePage={basePage}
-              page={parsedYml}
+              page={memoizedParsedYml}
               config={config}
               components={{
                 Button,
@@ -167,14 +169,14 @@ function App({
               select: selectDevice,
               selectOptions: selectDeviceOptions,
             }}
-            page={{
-              selected: selectedPage,
-              select: selectPage,
-              selectOptions: selectPageOptions,
-            }}
+            // page={{
+            //   selected: selectedPage,
+            //   select: selectPage,
+            //   selectOptions: selectPageOptions,
+            // }}
           />
           <div>
-            <YamlEditor yml={yml} setYml={setYml} />
+            <YamlEditor onYmlChange={onYmlChange} />
           </div>
         </Panel>
       </Grid>

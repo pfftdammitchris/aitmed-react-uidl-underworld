@@ -18,6 +18,7 @@ import HttpIcon from '@material-ui/icons/Http'
 import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import SearchIcon from '@material-ui/icons/Search'
+import TocIcon from '@material-ui/icons/Toc'
 import DocumentationItem from './Item'
 
 const componentKeys = [
@@ -76,6 +77,11 @@ const componentKeys = [
   {
     icon: <ViewCompactIcon />,
     title: 'view',
+    description: 'Resolves to a <div /> html dom element',
+  },
+  {
+    icon: <TocIcon />,
+    title: 'footer',
     description: 'Resolves to a <div /> html dom element',
   },
 ]

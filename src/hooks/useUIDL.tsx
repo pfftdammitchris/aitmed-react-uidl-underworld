@@ -1,11 +1,9 @@
 import React from 'react'
-import axios from 'axios'
 import yaml from 'yaml'
 import { useImmer } from 'use-immer'
 import { prynote } from 'app/client'
 import useSelectPage from 'hooks/useSelectPage'
 import useSelectDevice from 'hooks/useSelectDevice'
-import { log } from 'utils'
 
 const storedConfigKey = 'uidl-uw'
 
@@ -60,7 +58,7 @@ function useUIDL({
   } = useSelectDevice({ initialValue: 'galaxyS5' })
 
   const { selectedPage, selectPage, selectPageOptions } = useSelectPage({
-    name: '1_SignIn',
+    name: '',
     pages: state.pages,
     navigate,
   })
@@ -112,9 +110,6 @@ function useUIDL({
         const { baseUrl = '', page: pages = [] } = config
         const baseCss = await prynote.uidl.getUIDL(`${baseUrl}BaseCSS.yml`)
         const basePage = await prynote.uidl.getUIDL(`${baseUrl}BasePage_en.yml`)
-        // if (location?.pathname === '/') {
-        //   navigate(config.startPage || '1_SignIn')
-        // }
 
         setState((draft) => {
           draft.config = config
@@ -127,22 +122,6 @@ function useUIDL({
     init()
     // eslint-disable-next-line
   }, [])
-
-  React.useEffect(() => {
-    async function getUIDL() {
-      try {
-        const url = `${state.config?.baseUrl || baseUrl}${selectedPage}_en.yml`
-        const { data: pageYml } = await axios.get(url)
-        onYmlChange(pageYml)
-      } catch (error) {
-        console.error(error)
-        window.alert(error.message)
-      }
-    }
-    log({ msg: `Fetching uidl page "${selectedPage}"`, color: '#a80a7a' })
-    getUIDL()
-    // eslint-disable-next-line
-  }, [selectedPage])
 
   return {
     ...state,
