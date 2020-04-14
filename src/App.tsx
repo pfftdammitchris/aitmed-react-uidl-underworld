@@ -61,6 +61,7 @@ function App({
     selectPage,
     selectPageOptions,
     yml,
+    parsedYml,
     setYml,
   } = useUIDL({
     baseUrl,
@@ -144,7 +145,7 @@ function App({
             <ReactUIDL
               baseCss={baseCss}
               basePage={basePage}
-              page={yaml.parse(yml)}
+              page={parsedYml}
               config={config}
               components={{
                 Button,

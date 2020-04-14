@@ -145,9 +145,14 @@ function useYamlEditor({
   }, [yml])
 
   return {
+<<<<<<< HEAD
     delay,
     setDelay,
     onChange,
+=======
+    ...state,
+    onYmlChange,
+>>>>>>> master
   }
 }
 

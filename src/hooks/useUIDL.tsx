@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import yaml from 'yaml'
 import { useImmer } from 'use-immer'
 import { prynote } from 'app/client'
 import useSelectPage from 'hooks/useSelectPage'
@@ -50,6 +51,7 @@ function useUIDL({
 }) {
   const [state, setState] = useImmer(initialState)
   const [yml, setYml] = React.useState('')
+  const [parsedYml, setParsedYml] = React.useState({})
 
   const {
     selectedDevice,
@@ -73,12 +75,25 @@ function useUIDL({
 
   function onYmlChange(e: React.ChangeEvent<HTMLInputElement> | string) {
     // Caller is directly using a YAML string
+    let parsed
     if (typeof e === 'string') {
+      try {
+        parsed = yaml.parse(e)
+      } catch (error) {
+        console.error(error)
+      }
       setYml(e)
+      if (parsed) setParsedYml(parsed)
     } else {
       e.persist()
       if (e.target.value !== yml) {
+        try {
+          parsed = yaml.parse(e.target.value)
+        } catch (error) {
+          console.error(error)
+        }
         setYml(e.target.value)
+        if (parsed) setParsedYml(parsed)
       }
     }
   }
@@ -118,7 +133,7 @@ function useUIDL({
       try {
         const url = `${state.config?.baseUrl || baseUrl}${selectedPage}_en.yml`
         const { data: pageYml } = await axios.get(url)
-        setYml(pageYml)
+        onYmlChange(pageYml)
       } catch (error) {
         console.error(error)
         window.alert(error.message)
@@ -138,7 +153,9 @@ function useUIDL({
     selectedPage,
     selectPageOptions,
     yml,
-    setYml: onYmlChange,
+    parsedYml,
+    setYml,
+    onYmlChange,
     onSelectDevice,
     onSelectPage,
   }

@@ -57,7 +57,6 @@ export default YamlEditor
         onChange={setYml}
         rows={15}
         rowsMax={30}
-        label="Editor"
         InputLabelProps={{
           classes: {
             root: 'label',
