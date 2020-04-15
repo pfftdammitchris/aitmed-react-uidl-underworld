@@ -1,8 +1,8 @@
 import React from 'react'
 import omit from 'lodash.omit'
 import { UIDLComponent, UIDLPage } from '@aitmed/react-uidl'
-import { Draft, useImmer } from 'use-immer'
-import { log } from 'utils'
+import { Draft } from 'immer'
+import { useImmer } from 'use-immer'
 
 const initialState = {
   ids: {
@@ -86,31 +86,46 @@ function usePageStatistics({ parsedYml }: { parsedYml: null | UIDLPage }) {
                   style,
                   type,
                 } = component
-                console.log(component)
 
                 // Classnames
                 if (className) {
+                  // @ts-ignore
                   draft.ids.classNames.push(className)
+                  // @ts-ignore
                   draft.classNames[className] = component
                 }
                 // Classnames
                 if (Array.isArray(classNames)) {
                   classNames.forEach((cn) => {
+                    // @ts-ignore
                     draft.ids.classNames.push(cn)
+                    // @ts-ignore
                     draft.classNames[cn] = component
                   })
                 }
                 // Component ids
                 if (componentId) {
-                  draft.ids.components.push(componentId)
+                  // @ts-ignore
+                  if (!draft.ids.components.includes(componentId)) {
+                    // @ts-ignore
+                    draft.ids.components.push(componentId)
+                  }
+                  // @ts-ignore
                   draft.components[componentId] = component
                 }
                 // Component types
                 if (type) {
-                  draft.ids.componentTypes.push(type)
+                  // @ts-ignore
+                  if (!draft.ids.componentTypes.includes(type)) {
+                    // @ts-ignore
+                    draft.ids.componentTypes.push(type)
+                  }
+                  // @ts-ignore
                   if (!draft.componentTypes[type]) {
+                    // @ts-ignore
                     draft.componentTypes[type] = {}
                   }
+                  // @ts-ignore
                   draft.componentTypes[type][componentId] = component
                 }
                 // Content types
@@ -119,35 +134,49 @@ function usePageStatistics({ parsedYml }: { parsedYml: null | UIDLPage }) {
                 }
                 // Data models
                 if (dataModel) {
+                  // @ts-ignore
                   if (!draft.ids.dataModels.includes(dataModel)) {
+                    // @ts-ignore
                     draft.ids.dataModels.push(dataModel)
                   }
                 }
                 if (dataId) {
+                  // @ts-ignore
                   draft.ids.dataIds.push(dataId)
+                  // @ts-ignore
                   draft.dataIds[dataId] = component
                 }
                 // Functions
                 if (onClick) {
+                  // @ts-ignore
                   draft.ids.functions.push(onClick)
+                  // @ts-ignore
                   draft.functions[onClick] = component
                 }
                 if (onHover) {
+                  // @ts-ignore
                   draft.ids.functions.push(onHover)
+                  // @ts-ignore
                   draft.functions[onHover] = component
                 }
                 // Placeholders
                 if (placeholder) {
+                  // @ts-ignore
                   draft.ids.placeholders.push(placeholder)
+                  // @ts-ignore
                   draft.placeholders[placeholder] = component
                 }
                 // Assets
                 if (path) {
+                  // @ts-ignore
                   draft.ids.paths.push(path)
+                  // @ts-ignore
                   draft.paths[path] = component
                 }
                 if (resource) {
+                  // @ts-ignore
                   draft.ids.resources.push(resource)
+                  // @ts-ignore
                   draft.resources[resource] = component
                 }
               }

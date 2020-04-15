@@ -93,6 +93,7 @@ function Select({
       }}
       variant="outlined"
       color="secondary"
+      colorScheme={colorScheme}
       select
       {...rest}
     >

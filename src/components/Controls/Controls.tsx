@@ -19,7 +19,6 @@ function Controls({ device, page }: ControlsProps) {
     <>
       {device && (
         <Select
-          colorScheme="dark"
           name="device"
           label="Select Device"
           value={device.selected}

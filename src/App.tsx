@@ -121,13 +121,6 @@ function App({
       <div style={{ height: 35 }} />
       <StyledAppBar position="relative">
         <StyledToolbar>
-          <Controls
-            device={{
-              selected: selectedDevice,
-              select: selectDevice,
-              selectOptions: selectDeviceOptions,
-            }}
-          />
           <Statistics parsedYml={parsedYml} parsingErrored={parsingErrored} />
         </StyledToolbar>
       </StyledAppBar>
@@ -182,6 +175,13 @@ function App({
         </Panel>
         <Panel xs={12} sm={6} md={7} lg={7} xl={5} item>
           <div>
+            <Controls
+              device={{
+                selected: selectedDevice,
+                select: selectDevice,
+                selectOptions: selectDeviceOptions,
+              }}
+            />
             <YamlEditor onYmlChange={onYmlChange} />
           </div>
         </Panel>
