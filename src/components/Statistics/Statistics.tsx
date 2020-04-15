@@ -2,8 +2,6 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import Grow from '@material-ui/core/Grow'
 import isEmpty from 'lodash/isEmpty'
-import MuiBadge from '@material-ui/core/Badge'
-import styled from 'styled-components'
 import { UIDLPage } from '@aitmed/react-uidl'
 import LabelIcon from '@material-ui/icons/Label'
 import MergeTypeIcon from '@material-ui/icons/MergeType'
@@ -14,44 +12,27 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint'
 import TextFieldsIcon from '@material-ui/icons/TextFields'
 import usePageStatistics from 'hooks/usePageStatistics'
 import Tooltip, { TooltipProps } from 'components/common/Tooltip'
+import {
+  StyledBadge,
+  StyledCaption,
+  StyledList,
+  StyledListLabel,
+  StyledListItem,
+} from './styled'
 
 export interface StatisticsProps {
   parsedYml: null | UIDLPage
   parsingErrored?: boolean
 }
 
-const StyledBadge = styled(MuiBadge)`
-  margin: 0 15px;
-  :hover {
-    transform: scale(1.1);
-    transition: all 0.1s ease-out;
-  }
-`
-
-const StyledCaption = styled(Typography)`
-  font-weight: 700 !important;
-`
-
-const StyledList = styled.ul`
-  padding-left: 0;
-  list-style-type: none;
-`
-
-const StyledListLabel = styled.li`
-  padding: 0;
-  margin: 0;
-  font-style: italic;
-  text-transform: uppercase;
-  color: cyan;
-  font-weight: 700;
-`
-
-const StyledListItem = styled.li`
-  padding-left: 10px;
-`
-
-function renderList(label: string, children: React.ReactNode[]) {
-  return <StyledList>{children}</StyledList>
+function renderList(items: string[]) {
+  return (
+    <StyledList>
+      {items.map((item: string) => (
+        <StyledListItem key={item}>{item}</StyledListItem>
+      ))}
+    </StyledList>
+  )
 }
 
 function getBadges(
@@ -67,78 +48,43 @@ function getBadges(
       title: 'Component IDs',
       badgeContent: ids.components.length,
       icon: <LabelIcon />,
-      tooltipTitle: renderList(
-        'Component Ids',
-        ids.components.map((componentId: string) => (
-          <StyledListItem key={componentId}>{componentId}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.components),
     },
     {
       title: 'Component Types',
       badgeContent: ids.componentTypes.length,
       icon: <MergeTypeIcon />,
-      tooltipTitle: renderList(
-        'Component Types',
-        ids.componentTypes.map((componentType: string) => (
-          <StyledListItem key={componentType}>{componentType}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.componentTypes),
     },
     {
       title: 'Functions',
       badgeContent: ids.functions.length,
       icon: <FunctionsIcon />,
-      tooltipTitle: renderList(
-        'Functions',
-        ids.functions.map((fnName: string) => (
-          <StyledListItem key={fnName}>{fnName}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.functions),
     },
     {
       title: 'Class names',
       badgeContent: ids.classNames.length,
       icon: <StyleIcon />,
-      tooltipTitle: renderList(
-        'Class Names',
-        ids.classNames.map((clsn: string) => (
-          <StyledListItem key={clsn}>{clsn}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.classNames),
     },
     {
       title: 'Texts',
       badgeContent: ids.texts.length,
       icon: <TextFieldsIcon />,
-      tooltipTitle: renderList(
-        'Texts',
-        ids.texts.map((text: string) => (
-          <StyledListItem key={text}>{text}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.texts),
     },
     {
       title: 'Data Models',
       badgeContent: ids.dataModels.length,
       icon: <StorageIcon />,
-      tooltipTitle: renderList(
-        'Data Models',
-        ids.dataModels.map((dataModelId: string) => (
-          <StyledListItem key={dataModelId}>{dataModelId}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.dataModels),
     },
     {
       title: 'Data IDs',
       badgeContent: ids.dataIds.length,
       icon: <FingerprintIcon />,
-      tooltipTitle: renderList(
-        'Data Ids',
-        ids.dataIds.map((dataId: string) => (
-          <StyledListItem key={dataId}>{dataId}</StyledListItem>
-        )),
-      ),
+      tooltipTitle: renderList(ids.dataIds),
     },
   ]
 }
@@ -195,7 +141,12 @@ function Statistics({ parsedYml, parsingErrored }: StatisticsProps) {
           index: number,
         ) =>
           badgeContent ? (
-            <Tooltip title={tooltipTitle} placement="top" enterDelay={0}>
+            <Tooltip
+              key={title}
+              title={tooltipTitle}
+              placement="top"
+              enterDelay={0}
+            >
               <div>
                 <StyledBadge
                   key={`statistic-badge${index}`}
@@ -209,14 +160,7 @@ function Statistics({ parsedYml, parsingErrored }: StatisticsProps) {
                 >
                   {icon}
                 </StyledBadge>
-                <Typography
-                  style={{
-                    color: 'cyan',
-                    textTransform: 'uppercase',
-                    fontWeight: 700,
-                  }}
-                  variant="caption"
-                >
+                <Typography component={StyledListLabel} variant="caption">
                   {title}
                 </Typography>
               </div>
