@@ -12,22 +12,50 @@ export interface SelectOption {
 
 export interface SelectProps extends MuiSelectProps {
   options: SelectOption[]
+  colorScheme?: 'light' | 'dark'
 }
 
-const StyledSelect = styled(TextField)`
-  option,
-  select {
-    color: rgba(0, 0, 0, 0.8);
+const StyledSelect = styled(TextField)<{ colorScheme?: 'light' | 'dark' }>`
+  .select {
+    color: ${({ colorScheme }) => {
+      if (colorScheme === 'light') {
+        return 'rgba(0, 0, 0, 0.8)'
+      }
+      return '#fff'
+    }};
   }
   .input {
-    box-shadow: 1px 1px 10px rgba(25, 37, 45, 0.15);
+    box-shadow: ${({ colorScheme }) => {
+      if (colorScheme === 'light') {
+        return '1px 1px 10px rgba(25, 37, 45, 0.15)'
+      }
+      return '1px 1px 10px rgba(255, 255, 255, 0.15)'
+    }};
   }
   .outline {
-    color: rgba(0, 0, 0, 0.8);
-    border: 1px #37506c solid;
+    border: ${({ colorScheme }) => {
+      if (colorScheme === 'light') {
+        return '1px #37506c solid'
+      }
+      return '1px #fff solid'
+    }};
+    color: ${({ colorScheme }) => {
+      if (colorScheme === 'light') {
+        return 'rgba(0, 0, 0, 0.8)'
+      }
+      return '#fff'
+    }};
   }
   .label {
-    color: rgba(0, 0, 0, 0.7);
+    color: ${({ colorScheme }) => {
+      if (colorScheme === 'light') {
+        return 'rgba(0, 0, 0, 0.7)'
+      }
+      return '#fff'
+    }};
+  }
+  .arrow {
+    color: #fff;
   }
 `
 
@@ -36,6 +64,7 @@ function Select({
   InputProps,
   InputLabelProps,
   SelectProps,
+  colorScheme = 'light',
   ...rest
 }: any) {
   return (
@@ -56,7 +85,9 @@ function Select({
       SelectProps={{
         ...SelectProps,
         classes: {
+          select: 'select',
           outlined: 'outlined',
+          icon: 'arrow',
           ...SelectProps?.classes,
         },
       }}

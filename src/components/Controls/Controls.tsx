@@ -16,9 +16,10 @@ export interface ControlsProps {
 
 function Controls({ device, page }: ControlsProps) {
   return (
-    <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+    <>
       {device && (
         <Select
+          colorScheme="dark"
           name="device"
           label="Select Device"
           value={device.selected}
@@ -36,13 +37,18 @@ function Controls({ device, page }: ControlsProps) {
           options={page.selectOptions}
         />
       )}
-    </div>
+    </>
   )
 }
 
 export default React.memo(Controls, (props, nextProps) => {
   if (props.device) {
     if (props.device.selected !== nextProps.device?.selected) {
+      return false
+    }
+  }
+  if (props.page) {
+    if (props.page.selected !== nextProps.page?.selected) {
       return false
     }
   }

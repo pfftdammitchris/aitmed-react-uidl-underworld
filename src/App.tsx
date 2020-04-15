@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid'
 import useTheme from '@material-ui/core/styles/useTheme'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 import YamlEditor from 'components/YamlEditor'
 import Panel from 'components/Panel'
 import Button from 'components/uidl/Button'
@@ -16,6 +18,7 @@ import Div from 'components/uidl/Div'
 import UIDLSelect from 'components/uidl/Select'
 import useUIDL from 'hooks/useUIDL'
 import Controls from 'components/Controls'
+import Statistics from 'components/Statistics'
 import Documentation from 'components/Documentation'
 import { devices, DeviceKey } from 'hooks/useSelectDevice'
 import { log } from './utils/common'
@@ -40,6 +43,14 @@ const StyledDocumentation = styled.div`
   box-sizing: border-box;
 `
 
+const StyledAppBar = styled(AppBar)`
+  background: rgba(55, 61, 73, 0.975) !important;
+`
+
+const StyledToolbar = styled(Toolbar)`
+  margin: auto;
+`
+
 function App({
   history,
   location,
@@ -56,7 +67,9 @@ function App({
     selectDevice,
     selectedDevice,
     selectDeviceOptions,
+    yml,
     parsedYml,
+    parsingErrored,
     onYmlChange,
   } = useUIDL({
     baseUrl,
@@ -80,8 +93,6 @@ function App({
       // log({ msg: 'page', color: 'olive', data: parsedYml })
     }
   }
-
-  const memoizedParsedYml = React.useMemo(() => parsedYml, [parsedYml])
 
   return (
     <>
@@ -107,7 +118,19 @@ function App({
           </Panel>
         </Grid>
       </StyledDocumentation>
-      <div style={{ height: 50 }} />
+      <div style={{ height: 35 }} />
+      <StyledAppBar position="relative">
+        <StyledToolbar>
+          <Controls
+            device={{
+              selected: selectedDevice,
+              select: selectDevice,
+              selectOptions: selectDeviceOptions,
+            }}
+          />
+          <Statistics parsedYml={parsedYml} parsingErrored={parsingErrored} />
+        </StyledToolbar>
+      </StyledAppBar>
       <Grid
         style={{
           width: '100%',
@@ -142,7 +165,7 @@ function App({
             <ReactUIDL
               baseCss={baseCss}
               basePage={basePage}
-              page={memoizedParsedYml}
+              page={parsedYml}
               config={config}
               components={{
                 Button,
@@ -158,13 +181,6 @@ function App({
           </div>
         </Panel>
         <Panel xs={12} sm={6} md={7} lg={7} xl={5} item>
-          <Controls
-            device={{
-              selected: selectedDevice,
-              select: selectDevice,
-              selectOptions: selectDeviceOptions,
-            }}
-          />
           <div>
             <YamlEditor onYmlChange={onYmlChange} />
           </div>

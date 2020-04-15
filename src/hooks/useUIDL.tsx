@@ -50,6 +50,7 @@ function useUIDL({
   const [state, setState] = useImmer(initialState)
   const [yml, setYml] = React.useState('')
   const [parsedYml, setParsedYml] = React.useState({})
+  const [parsingErrored, setParsingErrored] = React.useState(false)
 
   const {
     selectedDevice,
@@ -77,21 +78,25 @@ function useUIDL({
     if (typeof e === 'string') {
       try {
         parsed = yaml.parse(e)
+        if (parsingErrored) setParsingErrored(false)
+        setParsedYml(parsed)
       } catch (error) {
+        if (!parsingErrored) setParsingErrored(true)
         console.error(error)
       }
       setYml(e)
-      if (parsed) setParsedYml(parsed)
     } else {
       e.persist()
       if (e.target.value !== yml) {
         try {
           parsed = yaml.parse(e.target.value)
+          if (parsingErrored) setParsingErrored(false)
+          setParsedYml(parsed)
         } catch (error) {
           console.error(error)
+          if (!parsingErrored) setParsingErrored(true)
         }
         setYml(e.target.value)
-        if (parsed) setParsedYml(parsed)
       }
     }
   }
@@ -133,6 +138,7 @@ function useUIDL({
     selectPageOptions,
     yml,
     parsedYml,
+    parsingErrored,
     setYml,
     onYmlChange,
     onSelectDevice,
