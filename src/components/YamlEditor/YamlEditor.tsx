@@ -63,7 +63,7 @@ function YamlEditor({ onYmlChange }: YamlEditorProps) {
           onChange={onChange}
           keyBindingFn={keyBindingFn}
           handleKeyCommand={handleKeyCommand}
-          handleReturn={onReturn}
+          handleReturn={exampleInitialized ? undefined : onReturn}
           onTab={onTab}
           handlePastedText={onPastedText}
           blockRenderMap={blockRenderMap}

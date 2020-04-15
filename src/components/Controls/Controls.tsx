@@ -24,7 +24,6 @@ function Controls({ device, page }: ControlsProps) {
           value={device.selected}
           onChange={device.select}
           options={device.selectOptions}
-          inline
         />
       )}
       <div style={{ width: 10 }} />
@@ -35,7 +34,6 @@ function Controls({ device, page }: ControlsProps) {
           value={page.selected}
           onChange={page.select}
           options={page.selectOptions}
-          inline
         />
       )}
     </div>

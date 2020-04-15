@@ -4,6 +4,7 @@ import React from 'react'
 import {
   EditorState,
   ContentState,
+  CharacterMetadata,
   DraftHandleValue,
   Modifier,
   RichUtils,
@@ -36,14 +37,21 @@ function useYamlEditor({
   function initializeExample() {
     const contentState = ContentState.createFromText(exampleYml)
     const newEditorState = EditorState.createWithContent(contentState)
-    onChange(newEditorState)
+    onChange(newEditorState, { contentState })
     if (!exampleInitialized) setExampledInitialized(true)
   }
 
-  function onChange(nextEditorState: EditorState) {
-    const contentState = nextEditorState.getCurrentContent()
+  function onChange(
+    nextEditorState: EditorState,
+    {
+      contentState = nextEditorState.getCurrentContent(),
+    }: { contentState?: ContentState } = {},
+  ) {
     onYmlChange(contentState.getPlainText())
-    setEditorState(nextEditorState)
+    // const blockMap = contentState.getBlockMap()
+    setEditorState(() => {
+      return nextEditorState
+    })
   }
 
   /**
@@ -73,11 +81,15 @@ function useYamlEditor({
   }
 
   function onPastedText(text: string): DraftHandleValue {
-    if (exampleInitialized) return 'not-handled'
-    const contentState = ContentState.createFromText(text)
-    const nextEditorState = EditorState.createWithContent(contentState)
-    onChange(nextEditorState)
-    return 'handled'
+    try {
+      const contentState = ContentState.createFromText(text)
+      const nextEditorState = EditorState.createWithContent(contentState)
+      onChange(nextEditorState, { contentState })
+      return 'handled'
+    } catch (error) {
+      console.error(error)
+      return 'not-handled'
+    }
   }
 
   function keyBindingFn(e: React.KeyboardEvent<any>) {
@@ -141,7 +153,7 @@ function useYamlEditor({
       'insert-characters',
     )
 
-    onChange(newEditorState)
+    onChange(newEditorState, { contentState: newContentState })
     return 'handled'
   }
 

@@ -56,12 +56,7 @@ function App({
     selectDevice,
     selectedDevice,
     selectDeviceOptions,
-    selectedPage,
-    selectPage,
-    selectPageOptions,
-    yml,
     parsedYml,
-    setYml,
     onYmlChange,
   } = useUIDL({
     baseUrl,
@@ -169,11 +164,6 @@ function App({
               select: selectDevice,
               selectOptions: selectDeviceOptions,
             }}
-            // page={{
-            //   selected: selectedPage,
-            //   select: selectPage,
-            //   selectOptions: selectPageOptions,
-            // }}
           />
           <div>
             <YamlEditor onYmlChange={onYmlChange} />
