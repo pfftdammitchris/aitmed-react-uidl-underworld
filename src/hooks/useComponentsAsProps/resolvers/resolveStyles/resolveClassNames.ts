@@ -1,24 +1,26 @@
-import { ResolverOptions } from '../types'
+import { UIDLComponentStyleResolverArgs } from './resolveStyles'
 
 /**
  * Transformers their className aliases to actual classNames if globally found
- * @param { UIDLComponent } options.node - Mutable UIDL component
- * @param { object } options.css - Parsed base CSS object
- * @param { string } options.tagName - UIDL component's html tag name
+ * The classnames are not actually "css classnames", they are style objects that we merge
+ * into components with
+ * @param { object } options
+ * @param { object } options.style - UIDL style object
+ * @param { object } options.css - Global style object from UIDL base css
  */
-function resolveClassNames({ node, css }: ResolverOptions) {
-  if (node) {
-    if (node.className && css && node.className in css) {
-      Object.assign(node.style, css[node.className])
-      delete node['className']
+function resolveClassNames({ style, css }: UIDLComponentStyleResolverArgs) {
+  if (css) {
+    if (style.className && css[style.className]) {
+      Object.assign(style, css[style.className])
+      delete style['className']
     }
-    if (Array.isArray(node.classNames)) {
-      node.classNames.forEach((className: string) => {
-        if (className && css && className in css) {
-          Object.assign(node.style, css[className])
+    if (Array.isArray(style.classNames)) {
+      style.classNames.forEach((className: string) => {
+        if (className && css[className]) {
+          Object.assign(style, css[className])
         }
       })
-      delete node['classNames']
+      delete style['classNames']
     }
   }
 }

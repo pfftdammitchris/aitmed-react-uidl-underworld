@@ -1,5 +1,5 @@
-import { log } from '../utils/common'
-import { ResolverOptions } from '../types'
+import { log } from 'utils'
+import { UIDLComponentResolversArgs } from '..'
 
 /**
  * Supported tag names (anything not listed is assumed to be a new addition which
@@ -27,23 +27,13 @@ export function getTagName(type: string) {
     case 'textField':
       return 'input'
     case 'footer':
-      log({
-        msg:
-          'Encountered type: footer. Reminder: Handle list uidl components officially',
-        color: 'rgba(0,0,0,0.7)',
-      })
     case 'list':
-      log({
-        msg:
-          'Encountered type: list. Reminder: Handle list uidl components officially',
-        color: 'rgba(0,0,0,0.7)',
-      })
     case 'scrollView':
       log({
-        msg:
-          'Encountered type: scrollView. Reminder: Handle scrollView uidl components officially',
+        msg: `Encountered type: ${type}. Reminder: Handle ${type} uidl components officially`,
         color: 'rgba(0,0,0,0.7)',
       })
+      return 'div'
     case 'view':
       return 'div'
     default:
@@ -53,21 +43,22 @@ export function getTagName(type: string) {
 
 /**
  * Takes a UIDL component and resolves its html tag name by evaluating its "type" property
- * @param { UIDLComponent } options.node - Mutable UIDL component
- * @param { object } options.css - Parsed base CSS object
- * @param { string } options.tagName - UIDL component's html tag name
+ * @param { object } options
+ * @param { UIDLComponent } options.component - UIDL component
+ * @param { ViewportOptions } options.viewport - Object describing the viewport size
  */
-export function resolveTagName({ node, tagName }: ResolverOptions) {
+export function resolveTagName({ component }: UIDLComponentResolversArgs) {
+  const tagName = getTagName(component.type)
   if (!tagName) {
     log({
       msg:
         'None of the component types matched. Perhaps it needs to be ' +
         'supported? UIDL component type: ' +
-        node?.type,
+        component.type,
       color: 'red',
     })
   } else {
-    if (node) node.type = tagName
+    component.type = tagName
   }
 }
 

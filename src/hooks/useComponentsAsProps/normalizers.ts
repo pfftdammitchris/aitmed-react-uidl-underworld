@@ -1,21 +1,58 @@
-import { UIDLStyleBorder, ViewportOptions } from '../types'
-import { callAll, getViewportRatio, hasLetter, hasDecimal, log } from './common'
+import { UIDLStyleBorder } from '@aitmed/react-uidl'
+import { callAll, getViewportRatio, hasDecimal, hasLetter, log } from 'utils'
+import { UIDLComponentResolversArgs } from '.'
 
-function attachTextAlign(styleObj: any, textAlign: string) {
+/**
+ * Recurses throughout an object, converting any values that need to be explicitly converted
+ *  for html to render correctly
+ * @param { object } options
+ * @param { UIDLComponent } options.component - UIDL component
+ * @param { UIDLComponentResolversArgs } options.viewport - Object describing the viewport size
+ */
+export function normalizeStyleAttrs({
+  component,
+  viewport,
+  ...rest
+}: UIDLComponentResolversArgs) {
+  const keys = Object.keys(component.style)
+  const normalize = callAll(
+    normalizeAliasAttrs,
+    normalizeBorderAttrs,
+    normalizeColorAttrs,
+    normalizeFontAttrs,
+    normalizePositionAttrs,
+  )
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index]
+    const value = component.style[key]
+    if (value && typeof value === 'object') {
+      if (key !== 'border')
+        component.style[key] = normalizeStyleAttrs({
+          component: value,
+          viewport,
+          ...rest,
+        })
+    }
+  }
+  normalize(component.style, viewport)
+  return component.style
+}
+
+function attachTextAlign(component: any, textAlign: string) {
   if (textAlign) {
     if (textAlign === 'centerX') {
-      styleObj.textAlign = 'center'
+      component.style.textAlign = 'center'
     } else if (textAlign === 'centerY') {
-      styleObj.display = 'flex'
-      styleObj.alignItems = 'center'
-      delete styleObj['textAlign']
+      component.style.display = 'flex'
+      component.style.alignItems = 'center'
+      delete component.style['textAlign']
     } else {
       switch (textAlign) {
         case 'left':
         case 'center':
         case 'right':
-          if (styleObj['textAlign'] !== textAlign) {
-            styleObj.textAlign = textAlign
+          if (component.style['textAlign'] !== textAlign) {
+            component.style.textAlign = textAlign
           }
           return
         default:
@@ -31,166 +68,59 @@ function attachTextAlign(styleObj: any, textAlign: string) {
 }
 
 /** Normalize aliases like "textAlign", "align", etc.
- * @param { object } styleObj - Any style object
+ * @param { object } component.style - Any style object
  */
-export function normalizeAliasAttrs(styleObj: any) {
-  if (styleObj) {
-    if ('textAlign' in styleObj) {
-      const { textAlign } = styleObj
+export function normalizeAliasAttrs({
+  component,
+  viewport: { viewportWidth, viewportHeight },
+}: UIDLComponentResolversArgs) {
+  if (component.style) {
+    if ('textAlign' in component.style) {
+      const { textAlign } = component.style
       if (typeof textAlign === 'string') {
-        attachTextAlign(styleObj, textAlign)
+        attachTextAlign(component, textAlign)
       } else if (textAlign && typeof textAlign === 'object') {
         const { x, y } = textAlign
         if (typeof x !== 'undefined') {
-          attachTextAlign(styleObj, x)
+          attachTextAlign(component, x)
         }
         if (typeof y !== 'undefined') {
-          attachTextAlign(styleObj, y)
+          attachTextAlign(component, y)
         }
       }
     }
-    if ('align' in styleObj) {
-      const align = styleObj.align
+    if ('align' in component.style) {
+      const align = component.style.align
       if (align === 'centerX') {
-        styleObj.display = 'flex'
-        styleObj.justifyContent = 'center'
+        component.style.display = 'flex'
+        component.style.justifyContent = 'center'
       } else if (align === 'centerY') {
-        styleObj.display = 'flex'
-        styleObj.alignItems = 'center'
+        component.style.display = 'flex'
+        component.style.alignItems = 'center'
       }
-      delete styleObj['align']
-    }
-  }
-}
-
-/**
- * Recurses throughout an object, converting any values that need to be explicitly converted
- *  for html to render correctly
- * @param { object } styleObj - Any style object
- */
-export function normalizeStyleAttrs(
-  styleObj: Record<string, any>,
-  viewport: ViewportOptions,
-): any {
-  if (!styleObj) return styleObj
-  const keys = Object.keys(styleObj)
-  const normalize = callAll(
-    normalizeAliasAttrs,
-    normalizeBorderAttrs,
-    normalizeColorAttrs,
-    normalizeFontAttrs,
-    normalizePositionAttrs,
-  )
-  for (let index = 0; index < keys.length; index++) {
-    const key = keys[index]
-    const value = styleObj[key]
-    if (value && typeof value === 'object') {
-      if (key !== 'border') styleObj[key] = normalizeStyleAttrs(value, viewport)
-    }
-  }
-  normalize(styleObj, viewport)
-  return styleObj
-}
-
-/**
- * Normalizes any font attributes to be read for web pages
- * @param { object } styleObj - Any styleobject
- */
-export function normalizeFontAttrs(styleObj: any) {
-  if (styleObj) {
-    const { fontSize, fontStyle } = styleObj
-    // '10' --> 10
-    if (typeof fontSize === 'string' && !hasLetter(fontSize)) {
-      styleObj['fontSize'] = Number(fontSize)
-    }
-    if (fontStyle === 'bold') {
-      styleObj['fontWeight'] = 'bold'
-      delete styleObj['fontStyle']
-    }
-  }
-}
-
-/**
- * Normalizes any position attributes to be read for web pages
- * @param { object } styleObj - Any style object
- */
-export function normalizePositionAttrs({
-  component,
-  viewport: { viewportWidth, viewportHeight },
-}: ViewportOptions) {
-  const styleObj = component.style
-  const keysToHandle = ['width', 'height', 'top', 'left', 'right', 'bottom']
-  if (styleObj) {
-    keysToHandle.forEach((key: string) => {
-      if (key in styleObj) {
-        const value = styleObj[key]
-        if (value == '0') styleObj[key] = 0
-        else if (typeof value === 'string') {
-          if (key === 'width' || key === 'height') {
-            if (value == '1') {
-              const viewportSize =
-                key === 'width' ? viewportWidth : viewportHeight
-              styleObj[key] = viewportSize + 'px'
-            } else if (!hasLetter(value)) {
-              styleObj[key] = getViewportRatio(viewportWidth, value) + 'px'
-            }
-          } else if (!hasLetter(value) && hasDecimal(value)) {
-            if (key === 'left' || key === 'top') {
-              styleObj[key] = getViewportRatio(viewportHeight, value) + 'px'
-            }
-          }
-        }
-      }
-    })
-  }
-}
-
-/**
- * Normalizes any color attributes to be read for web pages
- * @param { object } styleObj - Any style object
- */
-export function normalizeColorAttrs(component: any) {
-  const styleObj = component.style
-  if (styleObj) {
-    const { color, textColor, backgroundColor } = styleObj
-    if (typeof color === 'string') {
-      // Convert color codes to their number data type for html to read correctly
-      if (color.startsWith('0x')) {
-        styleObj['color'] = color.replace('0x', '#')
-      }
-    }
-    if (typeof textColor === 'string') {
-      if (textColor.startsWith('0x')) {
-        styleObj['color'] = textColor.replace('0x', '#')
-      } else {
-        styleObj['color'] = textColor
-      }
-      delete styleObj['textColor']
-    }
-    if (typeof backgroundColor === 'string') {
-      if (backgroundColor.startsWith('0x')) {
-        styleObj['backgroundColor'] = backgroundColor.replace('0x', '#')
-      }
+      delete component.style['align']
     }
   }
 }
 
 /**
  * Converts a style object and normalizes it for html
- * @param { object } styleObj - Style object
+ * @param { object } component.style - Style object
  * 1) no border / no borderRadius/
  * 2) borderBottom / solid / no borderRadius/
  * 3) borderAll / solid / has borderRadius
  * 4) borderAll / dashed / no borderRadius
  * 5) no border / has borderRadius
  */
-export function normalizeBorderAttrs(component: any) {
-  const styleObj = component.style
-  if (styleObj) {
-    const border: UIDLStyleBorder = styleObj?.border
+export function normalizeBorderAttrs({
+  component,
+  viewport: { viewportWidth, viewportHeight },
+}: UIDLComponentResolversArgs) {
+  if (component.style) {
+    const border: UIDLStyleBorder = component.style?.border
     if (border == '0') {
-      styleObj.borderStyle = 'none'
-      delete styleObj['border']
+      component.style.borderStyle = 'none'
+      delete component.style['border']
     }
     let style, color, width, line
     if (border && typeof border === 'object') {
@@ -199,36 +129,132 @@ export function normalizeBorderAttrs(component: any) {
       width = border.width
       line = border.line
     }
-    if (color) styleObj.borderColor = color
-    if (line) styleObj.borderStyle = line
-    if (width) styleObj.borderWidth = width
+    if (color) component.style.borderColor = color
+    if (line) component.style.borderStyle = line
+    if (width) component.style.borderWidth = width
     if (style == '1') {
-      styleObj.borderStyle = 'none'
-      styleObj.borderRadius = 0
+      component.style.borderStyle = 'none'
+      component.style.borderRadius = 0
     } else if (style == '2') {
-      styleObj.borderRadius = 0
-      styleObj.borderStyle = 'none'
-      styleObj.borderBottomStyle = 'solid'
+      component.style.borderRadius = 0
+      component.style.borderStyle = 'none'
+      component.style.borderBottomStyle = 'solid'
     } else if (style == '3') {
-      styleObj.borderStyle = 'solid'
-      if (!width) styleObj.borderWidth = 'thin'
+      component.style.borderStyle = 'solid'
+      if (!width) component.style.borderWidth = 'thin'
     } else if (style == '4') {
-      styleObj.borderStyle = 'dashed'
-      if (!width) styleObj.borderWidth = 'thin'
-      styleObj.borderRadius = 0
+      component.style.borderStyle = 'dashed'
+      if (!width) component.style.borderWidth = 'thin'
+      component.style.borderRadius = 0
     } else if (style == '5') {
-      styleObj.borderStyle = 'none'
+      component.style.borderStyle = 'none'
     }
-    if (typeof styleObj.borderRadius === 'string') {
-      if (!hasLetter(styleObj.borderRadius)) {
-        styleObj.borderRadius = Number(styleObj.borderRadius)
+    if (typeof component.style.borderRadius === 'string') {
+      if (!hasLetter(component.style.borderRadius)) {
+        component.style.borderRadius = Number(component.style.borderRadius)
       }
     }
-    if (styleObj.borderWidth && typeof styleObj.borderWidth === 'string') {
-      if (!hasLetter(styleObj.borderWidth)) {
-        styleObj.borderWidth = `${styleObj.borderWidth}px`
+    if (
+      component.style.borderWidth &&
+      typeof component.style.borderWidth === 'string'
+    ) {
+      if (!hasLetter(component.style.borderWidth)) {
+        component.style.borderWidth = `${component.style.borderWidth}px`
       }
     }
-    delete styleObj['border']
+    delete component.style['border']
+  }
+}
+
+/**
+ * Normalizes any color attributes to be read for web pages
+ * @param { object } component.style - Any style object
+ */
+export function normalizeColorAttrs({
+  component,
+  viewport: { viewportWidth, viewportHeight },
+}: UIDLComponentResolversArgs) {
+  if (component.style) {
+    const { color, textColor, backgroundColor } = component.style
+    if (typeof color === 'string') {
+      // Convert color codes to their number data type for html to read correctly
+      if (color.startsWith('0x')) {
+        component.style['color'] = color.replace('0x', '#')
+      }
+    }
+    if (typeof textColor === 'string') {
+      if (textColor.startsWith('0x')) {
+        component.style['color'] = textColor.replace('0x', '#')
+      } else {
+        component.style['color'] = textColor
+      }
+      delete component.style['textColor']
+    }
+    if (typeof backgroundColor === 'string') {
+      if (backgroundColor.startsWith('0x')) {
+        component.style['backgroundColor'] = backgroundColor.replace('0x', '#')
+      }
+    }
+  }
+}
+
+/**
+ * Normalizes any font attributes to be read for web pages
+ * @param { object } options
+ * @param { UIDLComponent } options.component - UIDL component
+ * @param { UIDLComponentResolversArgs } options.viewport - Object describing the viewport size
+ */
+export function normalizeFontAttrs({
+  component,
+  viewport: { viewportWidth, viewportHeight },
+}: UIDLComponentResolversArgs) {
+  if (component.style) {
+    const { fontSize, fontStyle } = component.style
+    // '10' --> 10
+    if (typeof fontSize === 'string' && !hasLetter(fontSize)) {
+      component.style['fontSize'] = Number(fontSize)
+    }
+    if (fontStyle === 'bold') {
+      component.style['fontWeight'] = 'bold'
+      delete component.style['fontStyle']
+    }
+  }
+}
+
+/**
+ * Normalizes any position attributes to be read for web pages
+ * @param { object } options
+ * @param { UIDLComponent } options.component - UIDL component
+ * @param { UIDLComponentResolversArgs } options.viewport - Object describing the viewport size
+ */
+export function normalizePositionAttrs({
+  component,
+  viewport: { viewportWidth, viewportHeight },
+}: UIDLComponentResolversArgs) {
+  const keysToHandle = ['width', 'height', 'top', 'left', 'right', 'bottom']
+  if (component.style) {
+    keysToHandle.forEach((key: string) => {
+      if (key in component.style) {
+        const value = component.style[key]
+        if (value == '0') component.style[key] = 0
+        else if (typeof value === 'string') {
+          if (key === 'width' || key === 'height') {
+            if (value == '1') {
+              const viewportSize =
+                key === 'width' ? viewportWidth : viewportHeight
+              component.style[key] = viewportSize + 'px'
+            } else if (!hasLetter(value)) {
+              component.style[key] =
+                getViewportRatio(viewportWidth, value) + 'px'
+            }
+          } else if (!hasLetter(value) && hasDecimal(value)) {
+            if (key === 'left' || key === 'top') {
+              component.style[key] =
+                getViewportRatio(viewportHeight, value) + 'px'
+            }
+          }
+        }
+      }
+    })
   }
 }

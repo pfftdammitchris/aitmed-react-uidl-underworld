@@ -1,21 +1,21 @@
 import { log } from 'utils'
-import { UIDLComponentResolversArgs } from '../..'
+import { UIDLComponentStyleResolverArgs } from './resolveStyles'
 
-function attachTextAlign(styleObj: any, textAlign: string) {
+function attachTextAlign(style: any, textAlign: string) {
   if (textAlign) {
     if (textAlign === 'centerX') {
-      styleObj.textAlign = 'center'
+      style['textAlign'] = 'center'
     } else if (textAlign === 'centerY') {
-      styleObj.display = 'flex'
-      styleObj.alignItems = 'center'
-      delete styleObj['textAlign']
+      style['display'] = 'flex'
+      style['alignItems'] = 'center'
+      delete style['textAlign']
     } else {
       switch (textAlign) {
         case 'left':
         case 'center':
         case 'right':
-          if (styleObj['textAlign'] !== textAlign) {
-            styleObj.textAlign = textAlign
+          if (style.textAlign !== textAlign) {
+            style['textAlign'] = textAlign
           }
           return
         default:
@@ -31,37 +31,34 @@ function attachTextAlign(styleObj: any, textAlign: string) {
 }
 
 /**
- * Resolves a UIDL component's "align" property and attaches corresponding html attributes
- * @param { UIDLComponent } options.node - Mutable UIDL component
+ * Resolves an object's "align" property and attaches corresponding html attributes
+ * @param { object } style - Style object
  */
-function resolveAligns({ component, viewport }: UIDLComponentResolversArgs) {
-  const styleObj = component?.style
-  if (styleObj) {
-    if ('textAlign' in styleObj) {
-      const { textAlign } = styleObj
-      if (typeof textAlign === 'string') {
-        attachTextAlign(styleObj, textAlign)
-      } else if (textAlign && typeof textAlign === 'object') {
-        const { x, y } = textAlign
-        if (typeof x !== 'undefined') {
-          attachTextAlign(styleObj, x)
-        }
-        if (typeof y !== 'undefined') {
-          attachTextAlign(styleObj, y)
-        }
+function resolveAligns({ style }: UIDLComponentStyleResolverArgs) {
+  if (style['textAlign']) {
+    const { textAlign } = style
+    if (typeof textAlign === 'string') {
+      attachTextAlign(style, textAlign)
+    } else if (textAlign && typeof textAlign === 'object') {
+      const { x, y } = textAlign
+      if (typeof x !== 'undefined') {
+        attachTextAlign(style, x)
+      }
+      if (typeof y !== 'undefined') {
+        attachTextAlign(style, y)
       }
     }
-    if ('align' in styleObj) {
-      const align = styleObj.align
-      if (align === 'centerX') {
-        styleObj.display = 'flex'
-        styleObj.justifyContent = 'center'
-      } else if (align === 'centerY') {
-        styleObj.display = 'flex'
-        styleObj.alignItems = 'center'
-      }
-      delete styleObj['align']
+  }
+  if (style['align']) {
+    const align = style.align
+    if (align === 'centerX') {
+      style.display = 'flex'
+      style.justifyContent = 'center'
+    } else if (align === 'centerY') {
+      style.display = 'flex'
+      style.alignItems = 'center'
     }
+    delete style['align']
   }
 }
 

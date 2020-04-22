@@ -1,5 +1,5 @@
-import { log } from '../utils/common'
-import { ResolverOptions } from '../types'
+import { log } from 'utils'
+import { UIDLComponentResolversArgs } from '..'
 
 export function getInputType(contentType: string) {
   switch (contentType) {
@@ -19,60 +19,55 @@ export function getInputType(contentType: string) {
 /**
  * Renames some keywords to align more with html/css/etc
  * ex: resource --> src (for images)
- * @param { object } node - A mutable object
+ * @param { object } options
+ * @param { UIDLComponent } options.component - UIDL component
+ * @param { ViewportOptions } options.viewport - Object describing the viewport size
+ * @param { function } options.createAssetUrl - Creates an asset url using path
  */
-export function resolveAliases({ createAssetUrl, node }: ResolverOptions) {
-  if (node) {
+export function resolveAliases({
+  component,
+  createAssetUrl,
+}: UIDLComponentResolversArgs) {
+  if (component) {
     // Input (textfield) components
-    if (node['contentType']) {
-      const inputType = getInputType(node.contentType)
+    if (component['contentType']) {
+      const inputType = getInputType(component.contentType)
       if (!inputType) {
         log({
           msg:
             'None of the content (input) types matched. Perhaps it needs to be ' +
             'supported? UIDL content type: ' +
-            node.contentType,
+            component.contentType,
           color: '#bd1972',
         })
       } else {
-        node['inputType'] = inputType
+        component['inputType'] = inputType
       }
-      delete node['contentType']
+      delete component['contentType']
     }
     // Image/Button components
-    if (node['path']) {
-      if (createAssetUrl) {
-        node.src = createAssetUrl(node.path)
-      }
-      delete node['path']
+    if (component.path) {
+      component['src'] = createAssetUrl(component.path)
+      delete component['path']
     }
-    if ('resource' in node) {
-      node['src'] = node.resource
-      delete node['resource']
+    if (component.resource) {
+      component['src'] = component.resource
+      delete component['resource']
     }
-    if ('options' in node) {
-      if (Array.isArray(node['options'])) {
-        node.selectOptions = node.options.map(
-          (option: string, index: number) => {
-            if (typeof option === 'string') {
-              return {
-                index,
-                value: option,
-                label: option,
-              }
+    if (Array.isArray(component.options)) {
+      component['selectOptions'] = component.options.map(
+        (option: string, index: number) => {
+          if (typeof option === 'string') {
+            return {
+              index,
+              value: option,
+              label: option,
             }
-            return option
-          },
-        )
-        delete node['options']
-      } else {
-        log({
-          msg: `Options is not an array. ${
-            node.componentId ? 'Component ID: ' + node.componentId : ''
-          }`,
-          data: node.options,
-        })
-      }
+          }
+          return option
+        },
+      )
+      delete component['options']
     }
   }
 }

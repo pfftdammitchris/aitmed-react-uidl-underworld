@@ -93,3 +93,32 @@ export function hasLetter(value: any): boolean {
 export function isBrowser() {
   return typeof window !== 'undefined'
 }
+
+/**
+ * Returns a ratio (in pixels) computed from a total given viewport size
+ * @param { number } viewportSize - Size (in pixels) in the viewport (represents width or height)
+ * @param { string | number } size - Size (raw decimal value from UIDL response) most likely in decimals. Strings are converted to numbers to evaluate the value. Numbers that aren't decimals are used as a fraction of the viewport size.
+ */
+export function getViewportRatio(viewportSize: number, size: string | number) {
+  if (typeof size === 'string') {
+    // if has letter, check for unit
+    if (hasLetter(size)) {
+      log({
+        msg:
+          'The value of "size" could not be computed correctly because handling these types is not supported yet. Defaulting to full viewport',
+      })
+    }
+    if (hasDecimal(size)) {
+      return viewportSize * Number(size)
+    } else {
+      return viewportSize / Number(size)
+    }
+  } else if (typeof size === 'number') {
+    if (hasDecimal(size)) {
+      return viewportSize * Number(size)
+    } else {
+      return viewportSize / Number(size)
+    }
+  }
+  return viewportSize
+}
