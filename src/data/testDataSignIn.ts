@@ -38,18 +38,71 @@ components:
           textAlign: 
             x: center
             y: center
-      - type: textField
-        componentId: phoneNumberTextField
-        contentType: phoneNumber
-        placeholder: Phone Number
+      - type: view
+        componentId: countryCodeContainer
         style:
-          fontSize: "14"
-          left: "0.134"
-          top: "0.470"
+          left: "0.121"
+          top: "0.42"
+          width: "0.2"
+          height: "0.09"
+        children:
+          - type: label
+            componentId: countryCodeLabel
+            text: Country
+            style:
+              color: "0x300000058"
+              left: "0"
+              top: "0"
+              width: "0.2"
+              height: "0.041"
+              fontSize: "12"
+              textAlign: 
+                x: center
+                y: center
+          - type: select
+            componentId: countryCodeSelect
+            contentType: countryCode
+            style:
+              left: "0"
+              top: "0.045"
+              width: "0.2"
+              height: "0.041"
+              fontSize: "14"
+              placeholder: "US +1"
+              border:
+                style: "2"
+                color: "0x00000058"
+                width: "1"        
+      - type: view
+        componentId: phoneNumberContainer
+        style:
+          left: "0.3333"
+          top: "0.42"
           width: "0.747"
-          height: "0.041"
-          border:
-            style: "2"
+          height: "0.09"
+        children:
+          - type: label
+            componentId: phoneNumberLabel
+            text: Phone
+            style:
+              color: "0x300000058"
+              left: "0"
+              top: "0"
+              width: "0.483"
+              height: "0.041"
+              fontSize: "12"
+          - type: textField
+            componentId: phoneNumberTextField
+            contentType: phoneNumber
+            placeholder: "(555)123-4567"
+            style:
+              fontSize: "14"
+              left: "0"
+              top: "0.045"
+              width: "0.483"
+              height: "0.041"
+              border:
+                style: "2"
       - type: textField
         componentId: passwordTextField
         contentType: password
